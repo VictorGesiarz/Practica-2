@@ -11,14 +11,15 @@ cases = [
 ]
 
 
-def Manhattan(new_case, case):
-    
-    """Function to calculate the similarity between two cases. This function performs the Manhattan distance."""
-
-    weights = [1 for _ in range(len(new_case))]
-
-    return sum(abs(new_case[i] - case[i]) * weights[i] for i in range(len(new_case)))
-
+cases2 = [
+    [2, 3, 2, 0],
+    [2, 2, 1, 1], 
+    [4, 3, 2, 2], 
+    [0, 0, -1, 0]
+]
 
 
-Sistem = CBR(cases, Manhattan)
+Sistem = CBR(cases2)
+print(Sistem)
+Sistem.run([3, 1, 2])
+print(Sistem)
