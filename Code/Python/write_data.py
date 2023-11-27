@@ -7,7 +7,7 @@ users = [
 
 users_columns = ["Username", "Password", "FirstName", "LastName", "Email", "Phone", "Gender", "Age"]
 users_df = pd.DataFrame(users, columns=users_columns)
-users_df.to_csv("./Code/Python/Data/users.csv")
+users_df.to_csv("./Code/Python/Data/users.csv", index=False)
 
 
 cases = [
@@ -20,4 +20,4 @@ cases = [
 
 cases_columns = ["Title", "Author", "Pages", "Genres"]
 cases_df = pd.DataFrame(cases, columns=cases_columns)
-cases_df.to_csv("./Code/Python/Data/cases.csv")
+cases_df.to_csv("./Code/Python/Data/cases.csv", index=False)

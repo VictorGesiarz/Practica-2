@@ -1,15 +1,9 @@
 
 from CBR import CBR
 from User import User, Authentication
-from Books import Book, cases
+from Books import Book
+import pandas as pd
 
-
-new_case = Book("", "I dont know", 200, ["Romance", "Terror"])
-
-Sistem = CBR(cases)
-print(Sistem)
-Sistem.run(new_case)
-print(Sistem)
 
 
 class Program():
@@ -30,4 +24,17 @@ class Program():
         else:
             return Authentication.create_user(self.users)
         
+    def main_loop(self):
+        ...
 
+
+users = pd.read_csv("./Code/Python/Data/users.csv")
+users = users.values.tolist()
+
+cases = pd.read_csv("./Code/Python/Data/cases.csv")
+cases = cases.values.tolist()
+
+P = Program(cases, users)
+
+
+new_case = Book("", "I dont know", 200, ["Romance", "Terror"])
