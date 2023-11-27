@@ -1,9 +1,12 @@
+from Books import Book
+
 
 class CBR():
     
-    def __init__(self, cases, similarity_function=False) -> None:
-        self.solutions = [case[0] for case in cases]
-        self.problems = [case[1:] for case in cases]
+    def __init__(self, cases: list[Book], similarity_function=False) -> None:
+        self.cases = cases
+        self.solutions = [case.title for case in cases]
+        self.problems = [case.vector for case in cases]
         self.evaluations = [[] for _ in cases]
 
         self.length = len(cases)
@@ -13,32 +16,34 @@ class CBR():
 
     def __repr__(self) -> str:
         print("\n\n")
+        print("This CBR contains the next cases: \n")
         for i in range(self.length):
-            print(f'{" ".join([str(p) for p in self.problems[i]])} --> {str(self.solutions[i])} with an evaluation of {str(self.evaluations[i])}')
+            print(f'{self.cases[i]}, with an evaluation of {self.evaluations[i]}')
         print("\n\n")
         return ""
     
 
-    def run(self, new_case):
+    def run(self, new_problem: Book):
 
-        print("- - - - - - - - - - - - - - - - Welcome to the BookFinder! - - - - - - - - - - - - - - - - ")
+        vector = new_problem.vector
 
-        retrieved_cases = self.__retrieve(new_case)
+        retrieved_cases = self.__retrieve(vector)
         solution = self.__adapt(retrieved_cases)
 
-        print(f"We recommend you to read: {self.solutions[solution]}")
+        new_problem.title = self.solutions[solution]
+        print(f"We recommend you to read: {self.cases[solution]}")
 
         evaluation = self.__evaluate()
-        self.__learn(new_case, solution, evaluation)
+        self.__learn(new_problem, solution, evaluation)
     
 
-    def __retrieve(self, new_case):
+    def __retrieve(self, new_problem):
 
         """In this function we comnpare the cases we have with the new one and select the most similar."""
 
         similarities = []
         for case in self.problems:
-            similarity = self.similarity_function(new_case, case)
+            similarity = self.similarity_function(new_problem, case)
             similarities.append(similarity)
         
         x = 3
@@ -68,21 +73,22 @@ class CBR():
         return evaluacion
 
 
-    def __learn(self, new_case, solution, evaluation=[]):
+    def __learn(self, new_problem, solution, evaluation=[]):
         
         """In this function we save the new case with the corresponding solution and evaluation."""
 
-        self.problems.append(new_case)
+        self.cases.append(new_problem)
+        self.problems.append(new_problem.vector)
         self.solutions.append(self.solutions[solution])
         self.evaluations.append([evaluation])
 
         self.length += 1
 
 
-    def Manhattan(self, new_case, case):
+    def Manhattan(self, new_problem, case):
         
         """Function to calculate the similarity between two cases. This function performs the Manhattan distance."""
 
-        weights = [1 for _ in range(len(new_case))]
+        weights = [1 for _ in range(len(new_problem))]
 
-        return sum(abs(new_case[i] - case[i]) * weights[i] for i in range(len(new_case)))
+        return sum(abs(new_problem[i] - case[i]) * weights[i] for i in range(len(new_problem)))

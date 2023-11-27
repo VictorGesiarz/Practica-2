@@ -1,25 +1,33 @@
 
 from CBR import CBR
+from User import User, Authentication
+from Books import Book, cases
 
 
+new_case = Book("", "I dont know", 200, ["Romance", "Terror"])
 
-cases = [
-    ["The Hunger Games", "Suzanne Collins", 374, ["fantasy", "science-fiction", "romance"]],
-    ["Harry Potter 1", "J.K. Rowling", 194, ["fantasy", "magic"]],
-    ["Pride and Prejudice", "Jane Austen", 279, ["historical-fiction", "historical-romance"]],
-    ["Twilight", "Stephenie Meyer", 501, ["fantasy", "romance"]],
-]
-
-
-cases2 = [
-    [2, 3, 2, 0],
-    [2, 2, 1, 1], 
-    [4, 3, 2, 2], 
-    [0, 0, -1, 0]
-]
-
-
-Sistem = CBR(cases2)
+Sistem = CBR(cases)
 print(Sistem)
-Sistem.run([3, 1, 2])
+Sistem.run(new_case)
 print(Sistem)
+
+
+class Program():
+    
+    def __init__(self, cases, users) -> None:
+        
+        print("- - - - - - - - - - - - - - - - Welcome to the BookFinder! - - - - - - - - - - - - - - - - \n\n")
+        
+        self.sistem = CBR(cases)
+        self.users = users
+        self.user = self._init_user_()
+        
+    def _init_user_(self):
+        login = int(input(("Do you want to LogIn (1) or SignIn (2)? ")))
+        
+        if login == 1:
+            return Authentication.login(self.users)
+        else:
+            return Authentication.create_user(self.users)
+        
+

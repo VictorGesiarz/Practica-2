@@ -1,5 +1,5 @@
 
-GENRES = 4
+GENRES = ['Romance', 'Terror', 'Fantasy', 'SF']
 
 class Book():
 
@@ -13,29 +13,19 @@ class Book():
 
 
     def __repr__(self) -> str:
-        return f'Book name: {self.title}, written by: {self.author}. Has {self.pages} pages and the genres are {", ".join(self.genres)}'
+        line1 = f'Book name: {self.title}, written by: {self.author}. Has {self.pages} pages and the genres are {", ".join(self.genres)}\n'
+        # line2 = f'The vector representatio of this book is: {self.vector}\n'
+        return line1
 
     def calculate_vector(self):
         vector = []
 
         vector.append(self.pages)
 
-        vector.append(len(self.genres) / GENRES)
+        for i in GENRES:
+            if i in self.genres:
+                vector.append(1)
+            else:
+                vector.append(0)
 
         return vector
-
-
-cases = [
-    Book("The Hunger Games", "Suzanne Collins", 374, ["fantasy", "science-fiction", "romance"]),
-    Book("Harry Potter 1", "J.K. Rowling", 194, ["fantasy", "magic"]),
-    Book("Pride and Prejudice", "Jane Austen", 279, ["historical-fiction", "historical-romance"]),
-    Book("Twilight", "Stephenie Meyer", 501, ["fantasy", "romance"]),
-]
-
-
-
-"""
-
-ESTA IDEA NO ESTA MAL PERO TIENE UN PROBLEMA QUE NO SE COMO CUANTIFICAR CADA UNA DE LAS VARIABLES QUE ENTRAN DENRTO DE UN LIBRO
-
-"""
