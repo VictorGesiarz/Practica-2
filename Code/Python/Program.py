@@ -26,15 +26,3 @@ class Program():
         
     def main_loop(self):
         ...
-
-
-users = pd.read_csv("./Code/Python/Data/users.csv")
-users = users.values.tolist()
-
-cases = pd.read_csv("./Code/Python/Data/cases.csv")
-cases = cases.values.tolist()
-
-P = Program(cases, users)
-
-
-new_case = Book("", "I dont know", 200, ["Romance", "Terror"])

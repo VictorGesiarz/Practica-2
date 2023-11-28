@@ -39,15 +39,17 @@ class Authentication:
 
         identidied_user = None
 
-        username = input("Enter your username: ")
-        password = input("Enter your password: ")
         right_user = False
         while not right_user:
+            username = input("Enter your username: ")
+            password = input("Enter your password: ")
             for user in users:
                 if user.username == username and user.password == password:
                     identidied_user = user
                     right_user = True
                     break
+                else:
+                    print("The username or password was wrong. Try again.")
 
         return identidied_user
 
