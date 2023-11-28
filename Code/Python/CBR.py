@@ -81,7 +81,7 @@ class CBR():
         self.cases.append(new_problem)
         self.problems.append(new_problem.vector)
         self.solutions.append(self.solutions[solution])
-        self.evaluations.append([evaluation])
+        self.evaluations.append([evaluation])   # GUARDAR LA MEDIA Y EL NUMERO DE EVALUACIONES PARA LUEGO PODER ACTUALIZARLO SI HACEMOS MAS EVALUACIONES
 
         self.length += 1
 

@@ -12,9 +12,9 @@ class Program():
     
     def __init__(self, path_cases = "./Code/Python/Data/cases.csv", path_users = "./Code/Python/Data/users.csv") -> None:
         
-        print("\n\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
-        print("- - - - - - - - - - - - - - - - - - Welcome to the BookFinder! - - - - - - - - - - - - - - - - - -")
-        print("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - \n\n")
+        print("\n\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
+        print("- - - - - - - - - - - - - - - - - - Welcome to the BookFinder! - - - - - - - - - - - - - - - - - - - ")
+        print("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - \n\n")
         
         self.path_cases = path_cases
         self.path_users = path_users
