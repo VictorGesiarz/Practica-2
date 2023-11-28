@@ -1,11 +1,11 @@
 import pandas as pd
 
 users = [
-    ["VictorGesiarz", "1234", "Victor", "Gesiarz", "victor.gesiarz@estudiantat.upc.edu", 689425100, "M", 20],
-    ["PapaNoelito", "4321", "Noel", "Planell", "noel.planell@estudiantat.upc.edu", 689123425, "F", 45]
+    ['Victor', '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4', 'M', 20, ['-']], 
+    ['Noel', 'fe2592b42a727e977f055947385b709cc82b16b9a87f88c6abf3900d65d0cdc3', 'M', 20, ['-']]
 ]
 
-users_columns = ["Username", "Password", "FirstName", "LastName", "Email", "Phone", "Gender", "Age"]
+users_columns = ["Username", "Password", "Gender", "Age", "Books Read"]
 users_df = pd.DataFrame(users, columns=users_columns)
 users_df.to_csv("./Code/Python/Data/users.csv", index=False)
 
