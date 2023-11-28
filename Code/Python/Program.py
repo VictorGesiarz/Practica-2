@@ -2,6 +2,7 @@
 from CBR import CBR
 from User import User, Authentication
 from Books import Book
+from Questions import UserInteraction
 import pandas as pd
 from ast import literal_eval
 
