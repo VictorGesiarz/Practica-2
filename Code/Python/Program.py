@@ -1,7 +1,7 @@
 
 from CBR import CBR
-from User import User, Authentication
-from Books import Book
+from User import User, UserAuthentication
+from Case import Case
 from Questions import UserInteraction
 import pandas as pd
 from ast import literal_eval
@@ -36,7 +36,7 @@ class Program():
         cases_list = cases_db.values.tolist()
         cases = []
         for i in cases_list:
-            cases.append(Book(i[0], i[1], i[2], literal_eval(i[3])))
+            cases.append(Case(i[0], i[1], i[2], literal_eval(i[3])))
             
         return cases, users
     
@@ -45,9 +45,9 @@ class Program():
         login = int(input(("Do you want to LogIn (1), SignIn (2) or continue without identifying (3)? ")))
         
         if login == 1:
-            user = Authentication.login(self.users)
+            user = UserAuthentication.login(self.users)
         elif login == 2:
-            user = Authentication.create_user(self.users)
+            user = UserAuthentication.create_user(self.users)
         elif login == 3:
             return User("NoUser")
         return user

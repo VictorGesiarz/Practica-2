@@ -1,7 +1,7 @@
 
 GENRES = ['Romance', 'Terror', 'Fantasy', 'SF']
 
-class Book():
+class Case():
 
     def __init__(self, title: str, author: str, pages: int, genres: list) -> None:
         self.title = title

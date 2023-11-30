@@ -20,7 +20,12 @@ class UserInteraction():
         choices += ["Done"]
         
         answers = []
-        while True:
+        finish = False
+        while not finish:
+
+            if choices == ["Done"]:
+                return answers
+
             choices_str = " / ".join([f'{choice} ({i+1})' for i, choice in enumerate(choices)])
             answer = input(f'{question} {choices_str}\n')        
             if answer.isnumeric():
@@ -30,7 +35,7 @@ class UserInteraction():
             for i, choice in enumerate(choices):
                 if answer == "Done" or (i+1 == answer and choice == "Done"):
                     return answers
-                if answer == i+1 or answer == choice:
+                elif answer == i+1 or answer == choice:
                     answers.append(choice)
                     choices.remove(choice)
                     break
@@ -42,3 +47,6 @@ class UserInteraction():
     @staticmethod
     def ask_questions():
         ...
+
+
+print(UserInteraction.ask_multiple_choice_question("Que prefieres?", ["Hola", "Adios", "Comeme_lapicha"]))

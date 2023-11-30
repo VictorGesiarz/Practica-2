@@ -26,7 +26,7 @@ class User():
         
 
         
-class Authentication:
+class UserAuthentication:
     @staticmethod
     def login(users: list[User]):
 
