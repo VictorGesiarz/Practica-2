@@ -1,6 +1,13 @@
 import hashlib
 import getpass
 
+from rich import print
+from rich.console import Console
+
+C = Console()
+C.print("HELLO WORLD")
+C.print("HELLO WORLD", style="italic")
+
 
 class User:
     
@@ -72,7 +79,7 @@ class UserInteraction:
         if book != "None" and book != "-":
             identidied_user.books_read.append(book)   
 
-        print("\nUser identified.\n")
+        print(self.MP.square("User identified."))
 
         return identidied_user
 
@@ -102,7 +109,7 @@ class UserInteraction:
             new_user.books_read.append(book)
 
         users.append(new_user)
-        self.MP.square("User created successfully.")
+        self.MP.square("User created successfully.", "")
         print(new_user, "\n")
         return new_user
 

@@ -54,15 +54,13 @@ class LoadData:
 
 class MessagePrinter:
     
-    def __init__(self, messages, 
-                 h_w = 150, h1_w = 100, h2_w = 75, e_w = 50, p_w = 50, l_w = 50,
-                 h_p = 3, h1_p = 2, h2_p = 1, e_p = 1, p_p = 0, l_p = 0):
+    def __init__(self, messages):
         
         self.__messages = messages
         
 
     def l(self, style = "l", width=50):
-        line = self.__messages["Lines"][style] * self.__widths[width]
+        line = self.__messages["Lines"][style] * width
         return line + "\n"
         
         
@@ -95,6 +93,10 @@ class MessagePrinter:
         line3 = (f"{border}")
         return padding + line1 + line2 + line3 + padding
         
+        
+    def h(self, message, additional_message=False, center=True):
+        return self.square(message, additional_message=additional_message, style="h", width=150, padding=3)
+
 
     def h1(self, message, additional_message=False, center=True):
         return self.p_l(message, additional_message=additional_message, style="h1", width=100, padding=2, p_padding=1, center=center)
@@ -108,13 +110,14 @@ class MessagePrinter:
         return self.p_l(message, additional_message=additional_message, style="e", width=50, padding=1, center=center)
 
 
-    def square(self, message, additional_massage=False, style="s", width=50, padding=1, p_padding=1, center=True):
-        padding = "\n" * padding
-        p_padding = "\n" * p_padding
+    def square(self, message, additional_message=False, style="s", width=50, padding=1, p_padding=1, center=True):        
         border_style = self.__messages["Lines"][style]
 
-        message = self.p(message, additional_message=additional_massage, width=width, padding=p_padding, center=center)
-        messages = message.split("\n")
+        padding = "\n" * padding
+        p_padding = (border_style[3] + " " * width + border_style[3] + "\n") * p_padding
+
+        message = self.p(message, additional_message=additional_message, width=width, padding=0, center=True)
+        messages = message.split("\n")[:-1]
         message = ""
         for i in messages:
             message += border_style[3] + i + border_style[3] + "\n"
@@ -125,17 +128,8 @@ class MessagePrinter:
         line2 = (f"{message}")
         line3 = (f"{border_style[4]}{border}{border_style[5]}\n")
         
-        return padding + line1 + line2 + line3 + padding
-
-    
-    def h(self, message, additional_message=False, center=True):
-        message = self.p(message, additional_message=additional_message, width="h", center=center)
-        border_style = self.__messages["Lines"]["h"]
-        border = border_style[0] * (self.__widths["h"])
-        padding = "\n" * self.__paddings["h"]
-        line1 = (f"{border_style[1]}{border}{border_style[2]}\n")
-        line2 = (f"\n{message}\n")
-        line3 = (f"\n{border_style[3]}{border}{border_style[4]}")
+        message = (line1 + line2 + line3)
+        
         return padding + line1 + line2 + line3 + padding
     
         
