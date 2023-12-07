@@ -1,81 +1,39 @@
 
 from CBR import CBR
-from User import User, UserAuthentication
+from User import User, UserInteraction
 from Case import Case
-from Questions import UserInteraction
-import pandas as pd
-from ast import literal_eval
-
+from Others import MessagePrinter, LoadData
 
 
 class Program():
     
-    def __init__(self, path_cases = "./Code/Python/Data/cases.csv", path_users = "./Code/Python/Data/users.csv") -> None:
+    def __init__(self, path_cases, path_users, path_texts) -> None:
+        self.MP = MessagePrinter(LoadData.load_json(path_texts))
+        self.UI = UserInteraction(self.MP)
         
-        print("\n\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
-        print("- - - - - - - - - - - - - - - - - - Welcome to the BookFinder! - - - - - - - - - - - - - - - - - - - ")
-        print("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - \n\n")
-        
-        self.path_cases = path_cases
-        self.path_users = path_users
-        
-        self.cases, self.users = self._load_data_()
-        self.user = self._init_user_()
-        
-        self.sistem = CBR(self.cases, self.user)
-       
-        
-    def _load_data_(self):
-        users_db = pd.read_csv(self.path_users)
-        users_list = users_db.values.tolist()
-        users = []
-        for i in users_list:
-            users.append(User(i[0], str(i[1]), i[2], i[3], literal_eval(i[4])))
-
-        cases_db = pd.read_csv(self.path_cases)
-        cases_list = cases_db.values.tolist()
-        cases = []
-        for i in cases_list:
-            cases.append(Case(i[0], i[1], i[2], literal_eval(i[3])))
-            
-        return cases, users
+        title = self.MP.read("Titles", "Main Title")
+        print(self.MP.h(title))
     
-    
-    def _init_user_(self):
-        login = int(input(("Do you want to LogIn (1), SignIn (2) or continue without identifying (3)? ")))
+        self.cases, self.users = LoadData.load_data(path_cases, path_users)
+        self.user = self.UI.init_user(self.users)
         
-        if login == 1:
-            user = UserAuthentication.login(self.users)
-        elif login == 2:
-            user = UserAuthentication.create_user(self.users)
-        elif login == 3:
-            return User("NoUser")
-        return user
+        self.CBR = CBR(self.cases, self.user)
         
         
     def main_loop(self):
-        ...
+        
+        questions_title = self.MP.read("Titles", "Questions Title")
+        print(self.MP.h1(questions_title))
+        
+        self.UI.ask_single_choice_question("Another")
+        self.UI.ask_multiple_choice_question("Languages")
         
     
     def end(self):
-        cases_list = []
-        for case in self.cases:
-            cases_list.append([case.title, case.author, case.pages, case.genres])
-        cases_columns = ["Title", "Author", "Pages", "Genres"]
-        cases_df = pd.DataFrame(cases_list, columns=cases_columns)
-        cases_df.to_csv(self.path_cases, index=False)
-        
-        users_list = []
-        for user in self.users:
-            users_list.append([user.username, user.password, user.gender, user.age, user.books_read])
-        users_columns = ["Username", "Password", "Gender", "Age", "Books Read"]
-        users_df = pd.DataFrame(users_list, columns=users_columns)
-        users_df.to_csv(self.path_users, index=False)
-        
-        print("\n\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
-        print("- - - - - - - - - - - - - - - - Thank you for using our recommender! - - - - - - - - - - - - - - - -")
-        print("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n\n")
+        end = self.MP.read("Titles", "End")
+        print(self.MP.h(end))
 
 
-P = Program()
+P = Program("./Code/Python/Data/cases.csv", "./Code/Python/Data/users.csv", "./Code/Python/Data/texts.json")
+P.main_loop()
 P.end()

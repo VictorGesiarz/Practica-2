@@ -1,10 +1,10 @@
-from Books import Book
+from Case import Case
 from User import User
 
 
-class CBR():
+class CBR:
     
-    def __init__(self, cases: list[Book], user: User, similarity_function=False) -> None:
+    def __init__(self, cases: list[Case], user: User, similarity_function=False) -> None:
         self.cases = cases
         self.solutions = [case.title for case in cases]
         self.problems = [case.vector for case in cases]
@@ -24,7 +24,7 @@ class CBR():
         return ""
     
 
-    def run(self, new_problem: Book):
+    def run(self, new_problem: Case):
 
         vector = new_problem.vector
 
