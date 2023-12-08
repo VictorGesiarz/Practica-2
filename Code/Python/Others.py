@@ -7,6 +7,15 @@ from Case import Case
 
 
 
+# from rich import print
+# from rich.console import Console
+
+# C = Console()
+# C.print("HELLO WORLD")
+# C.print("[cyan]HELLO WORLD", style="bold")
+
+
+
 class LoadData:
     
     @staticmethod
@@ -75,13 +84,11 @@ class MessagePrinter:
         padding = "\n" * padding
         if additional_message:
             message = message.replace(r"{}", additional_message)
-        if center:
-            lines = message.split("\n")
-            messages = []
-            for line in lines:
-                messages.append(self._center_and_wrap(line, width))
-            return padding + "\n".join(messages) + "\n" + padding
-        return padding + message + "\n" + padding
+        lines = message.split("\n")
+        messages = []
+        for line in lines:
+            messages.append(self._center_and_wrap(line, width, center=center))
+        return padding + "\n".join(messages) + "\n" + padding
         
     
     def p_l(self, message, additional_message=False, style="l", width=50, padding=0, p_padding=0, center=True):
@@ -92,10 +99,10 @@ class MessagePrinter:
         line2 = (f"{message}")
         line3 = (f"{border}")
         return padding + line1 + line2 + line3 + padding
-        
+
         
     def h(self, message, additional_message=False, center=True):
-        return self.square(message, additional_message=additional_message, style="h", width=150, padding=3)
+        return self.square(message, additional_message=additional_message, style="h", width=150, padding=3, p_padding=1)
 
 
     def h1(self, message, additional_message=False, center=True):
@@ -110,7 +117,7 @@ class MessagePrinter:
         return self.p_l(message, additional_message=additional_message, style="e", width=50, padding=1, center=center)
 
 
-    def square(self, message, additional_message=False, style="s", width=50, padding=1, p_padding=1, center=True):        
+    def square(self, message, additional_message=False, style="s", width=35, padding=1, p_padding=0, center=True):        
         border_style = self.__messages["Lines"][style]
 
         padding = "\n" * padding
@@ -133,8 +140,9 @@ class MessagePrinter:
         return padding + line1 + line2 + line3 + padding
     
         
-    def _center_and_wrap(self, message, width):
+    def _center_and_wrap(self, message, width, center=True):
         wrapped_message = textwrap.fill(message, width=width)
-        centered_lines = [line.center(width) for line in wrapped_message.splitlines()]
-        centered_and_wrapped_message = "\n".join(centered_lines)
-        return centered_and_wrapped_message
+        if center:
+            lines = [line.center(width) for line in wrapped_message.splitlines()]
+            wrapped_message = "\n".join(lines)
+        return wrapped_message
