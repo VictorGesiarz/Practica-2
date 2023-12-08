@@ -87,7 +87,7 @@ class MessagePrinter:
         lines = message.split("\n")
         messages = []
         for line in lines:
-            messages.append(self._center_and_wrap(line, width, center=center))
+            messages.append(self.center(line, width, center=center))
         return padding + "\n".join(messages) + "\n" + padding
         
     
@@ -102,7 +102,7 @@ class MessagePrinter:
 
         
     def h(self, message, additional_message=False, center=True):
-        return self.square(message, additional_message=additional_message, style="h", width=150, padding=3, p_padding=1)
+        return self.square(message, additional_message=additional_message, style="h", width=150, padding=3, p_padding=1, center=center)
 
 
     def h1(self, message, additional_message=False, center=True):
@@ -137,10 +137,10 @@ class MessagePrinter:
         
         message = (line1 + line2 + line3)
         
-        return padding + line1 + line2 + line3 + padding
+        return padding + "\n"  + line1 + line2 + line3 + padding
     
         
-    def _center_and_wrap(self, message, width, center=True):
+    def center(self, message, width, center=True):
         wrapped_message = textwrap.fill(message, width=width)
         if center:
             lines = [line.center(width) for line in wrapped_message.splitlines()]

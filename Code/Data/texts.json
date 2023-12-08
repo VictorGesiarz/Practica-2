@@ -1,0 +1,38 @@
+{
+    "Lines": {
+        "h": ["━", "┏", "┓", " ", "┗", "┛"], 
+        "h1": "═",
+        "h2": "─",
+        "e": "┅",
+        "l": "-",
+        "s": ["─", "┌", "┐", "|", "└", "┘"]
+    },
+    "Titles": {
+        "Main Title": "Welcome to the BookFinder!",
+        "Login Title": "Lets start by identifying you.",
+        "Questions Title": "Now we will proceed to ask a few questions about your preferences for the book you are searching for.",
+        "Review Title": "Now we want to know what you think of out recommendation.",
+        "End": "Thank you for using our recommender!\nWe hope to see you again."
+    },
+    "Errors": {
+        "Invalid Options": "The following options are not valid! ¯|_(ツ)_/¯ Please, try again ^^\nInvalid options: {}",
+        "No Languages Selected": "Thank you for providing your language preference!\nSince you don't know any of the languages, we cannot recommend you any book.\nWe are really sorry to see you go! ˙◠˙"
+    },
+    "Questions": {
+        "Login": {
+            "Name": "Identification options:",
+            "Question": "Do you want to: ",
+            "Options": ["LogIn", "SignIn", "Continue without identifying"]
+        },
+        "Languages": {
+            "Name": "Languages options:", 
+            "Question": "Which languages do you know and prefer to read? \nChoose them one by one (or multiple separated by a space):",
+            "Options": ["arabic", "chinese", "english", "french", "german", "hindi", "japanese", "portuguese", "russian", "spanish", "swahili"]
+        },
+        
+        "Rating": {
+            "Name": "Range 0 - 5",
+            "Question": "How good was the recommendation? "
+        }
+    }
+}

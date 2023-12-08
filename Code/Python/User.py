@@ -147,7 +147,7 @@ class UserInteraction:
 
         answer = []
         
-        options = self.MP.read("Questions", question, "Options")
+        options = self.MP.read("Questions", question, "Options") + ["No More"]
         question_name = self.MP.read("Questions", question, "Name")
         question_string = self.MP.read("Questions", question, "Question")
         error_string = self.MP.read("Errors", "Invalid Options")
@@ -170,9 +170,12 @@ class UserInteraction:
                     i = int(i)
                     if i not in available_options.keys():
                         invalid_options.append(i)
-                    elif i == len(options) - 1 and len(answer) > 0: 
-                        finish = True
-                        break
+                    elif i == len(options) - 1: 
+                        if not answer:
+                            invalid_options.append(i)                     
+                        else:
+                            finish = True
+                            break
                     else:
                         answer.append(options[i])
                 else: 
@@ -184,7 +187,6 @@ class UserInteraction:
             if invalid_options != []:
                 print(self.MP.e(error_string, additional_message=", ".join([str(i) for i in invalid_options]), center=False))
 
-            if len(answer) > 0 and "No more" not in options: options = options + ["No more"]
 
         return answer
 
