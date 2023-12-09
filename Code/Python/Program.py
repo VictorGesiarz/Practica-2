@@ -25,7 +25,6 @@ class Program():
         questions_title = self.MP.read("Titles", "Questions Title")
         print(self.MP.h1(questions_title))
         
-        self.UI.ask_single_choice_question("Another")
         self.UI.ask_multiple_choice_question("Languages")
         
     
@@ -34,6 +33,6 @@ class Program():
         print(self.MP.h(end))
 
 
-P = Program("./Code/Python/Data/cases.csv", "./Code/Python/Data/users.csv", "./Code/Python/Data/texts.json")
+P = Program("./Code/Data/cases.csv", "./Code/Data/users.csv", "./Code/Data/texts.json")
 P.main_loop()
 P.end()
