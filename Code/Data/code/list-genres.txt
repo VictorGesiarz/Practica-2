@@ -342,7 +342,7 @@
     'science',
     'fantasy',
     'childrens',
-    'mistery',
+    'mystery',
     'suspense',
     'crime',
     'thriller',
