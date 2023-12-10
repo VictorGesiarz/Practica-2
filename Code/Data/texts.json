@@ -20,19 +20,44 @@
     },
     "Questions": {
         "Login": {
-            "Name": "Identification options:",
             "Question": "Do you want to: ",
             "Options": ["LogIn", "SignIn", "Continue without identifying"]
         },
         "Languages": {
-            "Name": "Languages options:", 
             "Question": "Which languages do you know and prefer to read? \nChoose them one by one (or multiple separated by a space):",
             "Options": ["arabic", "chinese", "english", "french", "german", "hindi", "japanese", "portuguese", "russian", "spanish", "swahili"]
         },
-        
+        "Pages": {
+            "Question": "How long do you want the book to be?",
+            "Options": ["0 - 100 pages", "100 - 300 pages", "300 - 600 pages", "More than 600 pages"]
+        },
+        "Bestseller": {
+            "Question": "Do you want the book to be a bestseller?",
+            "Options": ["Yes", "No"]
+        },
+        "Film": {
+            "Question": "Do you want the book to be addapted to a film?",
+            "Options": ["Yes", "No"]
+        },
+        "Saga": {
+            "Question": "Do you want the book to be part of a saga?",
+            "Options": ["Yes", "No"]
+        },
+        "Publication Year": {
+            "Question": "How old do you want the book to be?",
+            "Options": ["Recently published", "1 - 2 years", "3 - 10 years", "10 - 50 years", "More than 50 years"]
+        },
         "Rating": {
-            "Name": "Range 0 - 5",
+            "Question": "Do you care about the rating of a book?",
+            "Options": ["Yes", "No"]
+        },
+        "": {
+            "Question": "",
+            "Options": []
+        },
+        "Recommendation Rating": {
             "Question": "How good was the recommendation? "
         }
     }
 }
+
