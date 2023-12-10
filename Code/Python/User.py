@@ -111,13 +111,12 @@ class UserInteraction:
     def ask_single_choice_question(self, question):
         
         options = self.MP.read("Questions", question, "Options")
-        question_name = self.MP.read("Questions", question, "Name")
         question_string = self.MP.read("Questions", question, "Question")
         error_string = self.MP.read("Errors", "Invalid Options")
         
         while True: 
             print(self.MP.h2(question_string))
-            print(question_name)
+            print(question)
             print(self.MP.l(), end="")
             available_options = {num: option for num, option in enumerate(options)}
             for num, option in available_options.items():
@@ -148,14 +147,13 @@ class UserInteraction:
         answer = []
         
         options = self.MP.read("Questions", question, "Options") + ["No More"]
-        question_name = self.MP.read("Questions", question, "Name")
         question_string = self.MP.read("Questions", question, "Question")
         error_string = self.MP.read("Errors", "Invalid Options")
 
         finish = False
         while not finish: 
             print(self.MP.h2(question_string))
-            print(question_name)
+            print(question)
             print(self.MP.l(), end="")
             available_options = {num: option for num, option in enumerate(options) if option not in answer}
             for num, option in available_options.items():
@@ -194,5 +192,60 @@ class UserInteraction:
     def ask_range_question(self, question):
         ...
         
-    def ask_open_question(self, question):
+    def ask_questions(self):
         ...
+        
+        # ['speculative',
+        # 'science',
+        # 'fantasy',
+        # 'childrens',
+        # 'mistery',
+        # 'suspense',
+        # 'crime',
+        # 'thriller',
+        # 'historical',
+        # 'history', # Se puede juntar con historical
+        # 'young adult',
+        # 'horror',
+        # 'romance',
+        # 'detective',
+        # 'adventure',
+        # 'spy',
+        # 'alternate',
+        # 'satire',
+        # 'gothic', 
+        # 'techno',
+        # 'war',
+        # 'sword',
+        # 'humour',
+        # 'sorcery',
+        # 'dystopia',
+        # 'utopian',
+        # 'high', # high fantasy
+        # 'picture book', # Para niños muy pequeños
+        # 'comic', # Remplazarla por comedy
+        # 'western',
+        # 'whodunnit', #  detective
+        # 'military',
+        # 'black', #'black comedy
+        # 'time travel',
+        # 'apocalyptic', # Tambien recogería postapocalyptic
+        # 'hard', # hard-science
+        # 'magic',
+        # 'realism',
+        # 'steampunk', 
+        # 'literary', # El plot no es lo que más importa, el tema y los personajes es más importante
+        # 'epistolary', # El libro son cartas entre los personajes
+        # 'alternate', # What if
+        # 'drama',
+        # 'tragedy', # Dentro de drama
+        # 'erotic',
+        # 'vampire',
+        # 'cyberpunk', # Podría juntar cyberpunk, steampunk, postcyberpunk
+        # 'true', # true Crime
+        # 'sci-fi', # Como Science
+        # 'fairy tale', # Como childrens?
+        # 'epic', # Epic fantasy
+        # 'lost world', # Dentro apocalyptic
+        # 'homor' # Como humour
+        # ]
