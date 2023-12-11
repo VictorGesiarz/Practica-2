@@ -61,7 +61,7 @@ class LoadData:
         
     @staticmethod
     def load_title_txt(filename = "./Code/Data/title.txt"):
-        with open(filename, 'r') as file:
+        with open(filename, 'r', encoding="UTF-8") as file:
             all_lines = file.readlines()
         string = "".join(all_lines)
         return string
