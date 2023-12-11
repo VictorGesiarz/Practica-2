@@ -3,11 +3,24 @@ GENRES = ['Romance', 'Terror', 'Fantasy', 'SF']
 
 class Case():
 
-    def __init__(self, title: str, author: str, pages: int, genres: list) -> None:
+    def __init__(self, 
+                 title: str, 
+                 author: str,
+                 publication_year: int, 
+                 pages: int, 
+                 genres: list[str],
+                 bestseller: str,
+                 film: str,
+                 saga: str) -> None:
+        
         self.title = title
         self.author = author
+        self.publication_year = publication_year
         self.pages = pages
         self.genres = genres
+        self.bestseller = bestseller
+        self.film = film
+        self.saga = saga
 
         self.vector = self.calculate_vector()
 
