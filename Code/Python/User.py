@@ -124,6 +124,7 @@ class UserInteraction:
             print(self.MP.l())
         
             user_input = input(self.MP.t())
+            print()
 
             invalid_options = []
             if user_input.isnumeric():
@@ -160,7 +161,8 @@ class UserInteraction:
                 print(self.MP.p(f"{num} - {option}"))
             print(self.MP.l())
 
-            user_input = input().split()
+            user_input = input(self.MP.t()).split()
+            print()
             
             invalid_options = []
             for i in user_input:
@@ -185,15 +187,35 @@ class UserInteraction:
             if invalid_options != []:
                 print(self.MP.e(error_string, additional_message=", ".join([str(i) for i in invalid_options]), center=False))
 
-
         return answer
 
 
     def ask_range_question(self, question):
         ...
         
+        
+    def ask_question(self, question): 
+        question_type = self.MP.read("Questions", question, "Type")
+        
+        if question_type == "Single Choice":
+            return self.ask_single_choice_question(question)
+        elif question_type == "Multiple Choice":
+            return self.ask_multiple_choice_question(question)
+        elif question_type == "Range":
+            return self.ask_range_question(question)
+        
+
     def ask_questions(self):
-        ...
+        questions_title = self.MP.read("Titles", "Questions Title")
+        print(self.MP.h1(questions_title))
+        
+        languages   = self.ask_question("Languages")
+        pages       = self.ask_question("Pages")
+        bestseller  = self.ask_question("Bestseller")
+        film        = self.ask_question("Film")
+        saga        = self.ask_question("Sage")
+        antiquity   = self.ask_question("Publication Year")
+        rating      = self.ask_question("Rating")
         
         # ['speculative',
         # 'science',
