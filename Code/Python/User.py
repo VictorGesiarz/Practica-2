@@ -53,8 +53,8 @@ class UserInteraction:
 
         right_user = False
         while not right_user:
-            username = input("\tEnter your username: ")
-            password = getpass.getpass("\tEnter your password: ")
+            username = input(self.MP.t(" - Enter your username: "))
+            password = getpass.getpass(self.MP.t(" - Enter your password: "))
             sha256 = hashlib.sha256()
             sha256.update(password.encode('utf-8'))
             hashed_password = sha256.hexdigest()
@@ -64,9 +64,9 @@ class UserInteraction:
                     right_user = True
                     break
             if not right_user:
-                print("\tThe username or password was wrong. Try again.")
+                print(self.MP.t("- - - The username or password was wrong. Try again. - - -"))
 
-        book = input("\tDo you want to add any new books you have read (End with -)? ")
+        book = input(self.MP.t(" - Do you want to add any new books you have read (End with -)? "))
         while book != "None" and book != "-":
             identidied_user.books_read.append(book)
             book = input()
@@ -81,21 +81,21 @@ class UserInteraction:
     def __create_user(self, users):
         new_user = User()
 
-        username = input("\t- Enter a new username: ")
+        username = input(self.MP.t(" - Enter a new username: "))
         while username in [user.username for user in users]:
-            username = input("\t- Already exists. Enter a new username: ")
+            username = input(self.MP.t(" - - - Already exists. Enter a new username: "))
         new_user.username = username
 
-        password = getpass.getpass("\t- Enter a password: ")
+        password = getpass.getpass(self.MP.t(" - Enter a password: "))
         sha256 = hashlib.sha256()
         sha256.update(password.encode('utf-8'))
         hashed_password = sha256.hexdigest()
         new_user.password = hashed_password
         
-        new_user.gender = input("\t- What is your gender? ")
-        new_user.age = int(input("\t- What is your age? "))
+        new_user.gender = input(self.MP.t(" - What is your gender? "))
+        new_user.age = int(input(self.MP.t(" - What is your age? ")))
 
-        book = input("\t- Can you list some books that you have read (or type '-' to finish)? ")
+        book = input(self.MP.t(" - Can you list some books that you have read (or type '-' to finish)? "))
         while book != "None" and book != "-":
             new_user.books_read.append(book)
             book = input()
@@ -116,14 +116,14 @@ class UserInteraction:
         
         while True: 
             print(self.MP.h2(question_string))
-            print(question)
-            print(self.MP.l(), end="")
+            print(self.MP.p(question))
+            print(self.MP.l())
             available_options = {num: option for num, option in enumerate(options)}
             for num, option in available_options.items():
-                print(f"{num}- {option}")
-            print(self.MP.l(), end="")
+                print(self.MP.p(f"{num} - {option}"))
+            print(self.MP.l())
         
-            user_input = input()
+            user_input = input(self.MP.t())
 
             invalid_options = []
             if user_input.isnumeric():
@@ -153,12 +153,12 @@ class UserInteraction:
         finish = False
         while not finish: 
             print(self.MP.h2(question_string))
-            print(question)
-            print(self.MP.l(), end="")
-            available_options = {num: option for num, option in enumerate(options) if option not in answer}
+            print(self.MP.p(question))
+            print(self.MP.l())
+            available_options = {num: option for num, option in enumerate(options)}
             for num, option in available_options.items():
-                print(f"{num}- {option}")
-            print(self.MP.l(), end="")
+                print(self.MP.p(f"{num} - {option}"))
+            print(self.MP.l())
 
             user_input = input().split()
             

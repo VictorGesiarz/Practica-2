@@ -8,11 +8,11 @@ from Others import MessagePrinter, LoadData
 class Program():
     
     def __init__(self, path_cases, path_users, path_texts) -> None:
-        self.MP = MessagePrinter(LoadData.load_json(path_texts))
+        self.MP = MessagePrinter(LoadData.load_json(path_texts), 158)
         self.UI = UserInteraction(self.MP)
         
-        title = self.MP.read("Titles", "Main Title")
-        print(self.MP.h(title))
+        title = LoadData.load_title_txt("./Code/Data/title1.txt")
+        print(self.MP.h(title, fill=False))
     
         self.cases, self.users = LoadData.load_data(path_cases, path_users)
         self.user = self.UI.init_user(self.users)
@@ -21,11 +21,10 @@ class Program():
         
         
     def main_loop(self):
-        
-        questions_title = self.MP.read("Titles", "Questions Title")
-        print(self.MP.h1(questions_title))
-        
-        self.UI.ask_multiple_choice_question("Languages")
+
+        finish = False
+        while not finish:
+            new_case = self.UI.ask_questions()
         
     
     def end(self):
