@@ -156,7 +156,7 @@ class UserInteraction:
             print(self.MP.h2(question_string))
             print(self.MP.p(question))
             print(self.MP.l())
-            available_options = {num: option for num, option in enumerate(options)}
+            available_options = {num: option for num, option in enumerate(options) if option not in answer}
             for num, option in available_options.items():
                 print(self.MP.p(f"{num} - {option}"))
             print(self.MP.l())
@@ -213,7 +213,7 @@ class UserInteraction:
         pages       = self.ask_question("Pages")
         bestseller  = self.ask_question("Bestseller")
         film        = self.ask_question("Film")
-        saga        = self.ask_question("Sage")
+        saga        = self.ask_question("Saga")
         antiquity   = self.ask_question("Publication Year")
         rating      = self.ask_question("Rating")
         

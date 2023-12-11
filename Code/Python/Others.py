@@ -7,15 +7,6 @@ from Case import Case
 
 
 
-# from rich import print
-# from rich.console import Console
-
-# C = Console()
-# C.print("HELLO WORLD")
-# C.print("[cyan]HELLO WORLD", style="bold")
-
-
-
 class LoadData:
     
     @staticmethod
