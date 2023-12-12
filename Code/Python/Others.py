@@ -7,15 +7,6 @@ from Case import Case
 
 
 
-# from rich import print
-# from rich.console import Console
-
-# C = Console()
-# C.print("HELLO WORLD")
-# C.print("[cyan]HELLO WORLD", style="bold")
-
-
-
 class LoadData:
     
     @staticmethod
@@ -61,13 +52,14 @@ class LoadData:
         
     @staticmethod
     def load_title_txt(filename = "./Code/Data/title.txt"):
-        with open(filename, 'r') as file:
+        with open(filename, 'r', encoding="UTF-8") as file:
             all_lines = file.readlines()
         string = "".join(all_lines)
         return string
         
 
 
+P_WIDTH = 75
 class MessagePrinter:
     
     def __init__(self, messages, max_width = 158, center = True):
@@ -84,7 +76,7 @@ class MessagePrinter:
         return message
     
 
-    def t(self, message="", width=50, add_jump=False):
+    def t(self, message="", width=P_WIDTH, add_jump=False):
         if self.center_everything:
             remain = (self.max_width - width) // 2
             lines = message.split("\n")
@@ -96,7 +88,7 @@ class MessagePrinter:
         return message
 
 
-    def l(self, style = "l", width=50, pad=True, add_jump=False):
+    def l(self, style = "l", width=P_WIDTH, pad=True, add_jump=False):
         line = self.__messages["Lines"][style] * width
         message = line
         if add_jump: message += "\n"
@@ -104,7 +96,7 @@ class MessagePrinter:
         return message
     
 
-    def p(self, message, additional_message=False, width=50, padding=0, center=False, fill=True, pad=True, add_jump=False):
+    def p(self, message="", additional_message=False, width=P_WIDTH, padding=0, center=False, fill=True, pad=True, add_jump=False):
         padding = "\n" * padding
         if additional_message:
             message = message.replace(r"{}", additional_message)
@@ -121,7 +113,7 @@ class MessagePrinter:
         return message
         
     
-    def p_l(self, message, additional_message=False, style="l", width=50, padding=0, p_padding=0, center=False, fill=True, pad=True):
+    def p_l(self, message, additional_message=False, style="l", width=P_WIDTH, padding=0, p_padding=0, center=False, fill=True, pad=True):
         border = self.l(style=style, width=width, pad=False, add_jump=True)
         message = self.p(message, additional_message=additional_message, width=width, padding=p_padding, center=center, fill=fill, pad=False, add_jump=True)
         padding = "\n" * padding
@@ -142,15 +134,15 @@ class MessagePrinter:
 
 
     def h1(self, message, additional_message=False, center=True):
-        return self.p_l(message, additional_message=additional_message, style="h1", width=100, padding=2, p_padding=1, center=center)
+        return self.p_l(message, additional_message=additional_message, style="h1", width=125, padding=2, p_padding=1, center=center)
 
 
     def h2(self, message, additional_message=False, center=True):
-        return self.p_l(message, additional_message=additional_message, style="h2", width=75, padding=1, center=center)
+        return self.p_l(message, additional_message=additional_message, style="h2", width=100, padding=1, center=center)
     
     
     def e(self, message, additional_message=False, center=True):
-        return self.p_l(message, additional_message=additional_message, style="e", width=50, padding=1, center=center)
+        return self.p_l(message, additional_message=additional_message, style="e", width=P_WIDTH, padding=1, center=center)
 
 
     def square(self, message, additional_message=False, style="s", width=35, padding=1, p_padding=0, fill=True, pad=True):
