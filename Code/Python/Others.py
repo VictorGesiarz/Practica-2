@@ -21,8 +21,14 @@ class LoadData:
         cases_list = cases_db.values.tolist()
         cases = []
         for i in cases_list:
-            cases.append(Case(i[0], i[1], i[2], literal_eval(i[3])))
-            
+            cases.append(Case(title=i[0], 
+                              author=i[1], 
+                              publication_year=i[2], 
+                              genres=literal_eval(i[3]),
+                              pages=i[5],
+                              bestseller=i[6],
+                              film=i[7],
+                              saga=i[8]))
         return cases, users
     
     @staticmethod

@@ -4,15 +4,13 @@ from User import User
 
 class CBR:
     
-    def __init__(self, cases: list[Case], user: User, similarity_function=False) -> None:
+    def __init__(self, cases: list[Case], user: User) -> None:
         self.cases = cases
-        self.solutions = [case.title for case in cases]
-        self.problems = [case.vector for case in cases]
         self.evaluations = [[] for _ in cases]
 
         self.length = len(cases)
         
-        self.similarity_function = self.Manhattan if not similarity_function else similarity_function
+        self.similarity_function = self.Manhattan
 
 
     def __repr__(self) -> str:
@@ -26,16 +24,14 @@ class CBR:
 
     def run(self, new_problem: Case):
 
-        vector = new_problem.vector
+        retrieved_cases = self.__retrieve(new_problem)
+        solutions = self.__adapt(retrieved_cases)
 
-        retrieved_cases = self.__retrieve(vector)
-        solution = self.__adapt(retrieved_cases)
+        for i in solutions:
+            print(f"We recommend you to read: {self.cases[i]}")
 
-        new_problem.title = self.solutions[solution]
-        print(f"We recommend you to read: {self.cases[solution]}")
-
-        evaluation = self.__evaluate()
-        self.__learn(new_problem, solution, evaluation)
+        evaluations = self.__evaluate()
+        self.__learn(new_problem, solutions, evaluations)
     
 
     def __retrieve(self, new_problem):
@@ -63,33 +59,35 @@ class CBR:
 
         # index = averages.index(max(averages))
 
-        return retrieved_cases[0]
+        return retrieved_cases
 
 
     def __evaluate(self):
 
         """In this function we will evaluate the given solution by asking the user how good it was."""
         
-        evaluacion = int(input("In a scale from 1 to 5, how good was the recommendation based on your what you were looking for? "))
+        evaluacion = int(input("Rate from 1 to 5 each of the recommendations: ")).split()
         return evaluacion
 
 
-    def __learn(self, new_problem, solution, evaluation=[]):
+    def __learn(self, new_problem, solutions, evaluations=[]):
         
         """In this function we save the new case with the corresponding solution and evaluation."""
 
-        self.cases.append(new_problem)
-        self.problems.append(new_problem.vector)
-        self.solutions.append(self.solutions[solution])
-        self.evaluations.append([evaluation])   # GUARDAR LA MEDIA Y EL NUMERO DE EVALUACIONES PARA LUEGO PODER ACTUALIZARLO SI HACEMOS MAS EVALUACIONES
+        for i in solutions:
+            self.cases.append(new_problem)
+            self.evaluations.append([evaluations[i]])   # GUARDAR LA MEDIA Y EL NUMERO DE EVALUACIONES PARA LUEGO PODER ACTUALIZARLO SI HACEMOS MAS EVALUACIONES
 
-        self.length += 1
+            self.length += 1
 
 
-    def Manhattan(self, new_problem, case):
+    def Manhattan(self, new_problem: Case, case: Case):
         
         """Function to calculate the similarity between two cases. This function performs the Manhattan distance."""
 
         weights = [1 for _ in range(len(new_problem))]
 
-        return sum(abs(new_problem[i] - case[i]) * weights[i] for i in range(len(new_problem)))
+        new_problem_values = new_problem.get_list()
+        case_values = case.get_list()
+
+        return sum(abs(new_problem_values[i] - case_values[i]) * weights[i] for i in range(len(new_problem)))
