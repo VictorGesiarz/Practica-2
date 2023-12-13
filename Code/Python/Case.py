@@ -1,28 +1,28 @@
 
-GENRES = ['Romance', 'Terror', 'Fantasy', 'SF']
+class Case:
 
-class Case():
 
     def __init__(self, 
-                 title: str, 
-                 author: str,
-                 publication_year: int, 
-                 pages: int, 
-                 genres: list[str],
-                 bestseller: str,
-                 film: str,
-                 saga: str) -> None:
-        
+                    title: str, 
+                    author: str,
+                #  publication_year: int,
+                    pages: int, 
+                    genres: list[str],
+                #  bestseller: str,
+                #  film: str,
+                #  saga: str
+                    ) -> None:
+
         self.title = title
         self.author = author
-        self.publication_year = publication_year
+        # self.publication_year = publication_year
         self.pages = pages
         self.genres = genres
-        self.bestseller = bestseller
-        self.film = film
-        self.saga = saga
+        # self.bestseller = bestseller
+        # self.film = film
+        # self.saga = saga
 
-        self.vector = self.calculate_vector()
+        self.transform_to_numbers()
 
 
     def __repr__(self) -> str:
@@ -30,15 +30,8 @@ class Case():
         # line2 = f'The vector representatio of this book is: {self.vector}\n'
         return line1
 
-    def calculate_vector(self):
+
+    def transform_to_numbers(self):
         vector = []
-
-        vector.append(self.pages)
-
-        for i in GENRES:
-            if i in self.genres:
-                vector.append(1)
-            else:
-                vector.append(0)
-
+        vector.append()        
         return vector
