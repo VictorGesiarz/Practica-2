@@ -1,7 +1,8 @@
 import hashlib
 import getpass
-
 from typing import List
+
+
 class User:
     
     def __init__(self, 
