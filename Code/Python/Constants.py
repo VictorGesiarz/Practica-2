@@ -46,7 +46,7 @@ MYSTERY         = 'mystery'
 
 
 
-genres = [
+GENRES = [
     'speculative', 'science', 'fantasy', 'childrens', 'suspense', 'crime', 'thriller', 'historical',
     'young adult', 'horror', 'romance', 'detective', 'adventure', 'spy', 'alternate', 'satire',
     'gothic', 'techno', 'war', 'sword', 'humour', 'sorcery', 'dystopia', 'utopian', 'high',
@@ -55,7 +55,7 @@ genres = [
     'true', 'epic', 'comedy', 'mystery'
 ]
 
-genres_dict = dict(zip(genres, range(1, len(genres) + 1)))
+genres_dict = dict(zip(GENRES, range(1, len(GENRES) + 1)))
 
 for key, value in genres_dict.items():
     globals()[key.replace(" ", "_").upper()] = value

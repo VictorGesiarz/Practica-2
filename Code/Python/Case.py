@@ -1,24 +1,26 @@
 import pandas as pd
 from typing import List
+from Constants import * 
+
 
 class Case:
 
     def __init__(self, 
-                    title: str, 
-                    author: str,
-                    publication_year: int,
-                    pages: int, 
-                    genres: List[str],
-                    bestseller: str,
-                    film: str,
-                    saga: str,
-                    user_age: int = 20
-                    ) -> None:
+                 title: str, 
+                 author: str,
+                 antiquity: int,
+                 pages: str, 
+                 genres: List[str],
+                 bestseller: str,
+                 film: str,
+                 saga: str,
+                 user_age: int = 20
+                 ) -> None:
 
         self.title = title                          # This element is the solution
 
         self.author = author                        # This elements are part of the problem
-        self.publication_year = publication_year
+        self.antiquity = antiquity
         self.pages = pages
         self.genres = genres
         self.bestseller = bestseller
@@ -49,6 +51,12 @@ class Case:
         
         if self.saga == "Yes": self.saga = 1 
         else: self.saga = 0
+
+        self.genres = [1 if genre in self.genres else 0 for genre in GENRES]
+
+        self.pages = 
+
+
 
 
 
