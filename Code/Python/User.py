@@ -1,7 +1,7 @@
 import hashlib
 import getpass
 
-
+from typing import List
 class User:
     
     def __init__(self, 
@@ -31,7 +31,7 @@ class UserInteraction:
         self.MP = MP
 
 
-    def init_user(self, users: list[User]):
+    def init_user(self, users: List[User]):
         
         login_title = self.MP.read("Titles", "Login Title")
         print(self.MP.h1(login_title))
@@ -47,7 +47,7 @@ class UserInteraction:
             return User("NoUser")
     
     
-    def __login(self, users: list[User]):
+    def __login(self, users: List[User]):
 
         identidied_user = None
 

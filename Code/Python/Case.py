@@ -1,3 +1,5 @@
+import pandas as pd
+from typing import List
 
 class Case:
 
@@ -6,7 +8,7 @@ class Case:
                     author: str,
                     publication_year: int,
                     pages: int, 
-                    genres: list[str],
+                    genres: List[str],
                     bestseller: str,
                     film: str,
                     saga: str,
@@ -32,6 +34,9 @@ class Case:
         line1 = f'Book NAME: {self.title}, written BY: {self.author}. Has {self.pages} PAGES and the GENRES are {", ".join(self.genres)}\n'
         line2 = f'Bestseller: {self.bestseller}, FILM: {self.film}, SAGA: {self.saga}\n\n'
         return line1 + line2
+    
+    def __len__(self):
+        return len(self.get_list())
 
 
     def transform_to_numbers(self):
@@ -46,5 +51,6 @@ class Case:
         else: self.saga = 0
 
 
+
     def get_list(self):
-        return [self.publication_year, self.pages, self.bestseller, self.film, self.saga, self.user_age] + [self.genres]
+        return [self.publication_year, self.pages, self.bestseller, self.film, self.saga, self.user_age] + self.genres

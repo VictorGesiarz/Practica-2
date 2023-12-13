@@ -12,7 +12,7 @@ class Program():
         self.MP = MessagePrinter(LoadData.load_json(path_texts), 158)
         self.UI = UserInteraction(self.MP)
         
-        title = LoadData.load_title_txt("./Code/Data/Titles/title.txt")
+        title = LoadData.load_title_txt("./Code/Data/Texts/title.txt")
         print(self.MP.h(title, fill=False))
     
         self.cases, self.users = LoadData.load_data(path_cases, path_users)
