@@ -1,4 +1,3 @@
-
 SPECULATIVE     = 'speculative'
 SCIENCE         = 'science'
 FANTASY         = 'fantasy'
@@ -44,3 +43,20 @@ TRUE            = 'true'
 EPIC            = 'epic'
 COMEDY          = 'comedy'
 MYSTERY         = 'mystery'
+
+
+
+genres = [
+    'speculative', 'science', 'fantasy', 'childrens', 'suspense', 'crime', 'thriller', 'historical',
+    'young adult', 'horror', 'romance', 'detective', 'adventure', 'spy', 'alternate', 'satire',
+    'gothic', 'techno', 'war', 'sword', 'humour', 'sorcery', 'dystopia', 'utopian', 'high',
+    'picture book', 'western', 'military', 'black', 'time travel', 'apocalyptic', 'hard', 'magic',
+    'realism', 'steampunk', 'literary', 'epistolary', 'drama', 'erotic', 'vampire', 'cyberpunk',
+    'true', 'epic', 'comedy', 'mystery'
+]
+
+genres_dict = dict(zip(genres, range(1, len(genres) + 1)))
+
+for key, value in genres_dict.items():
+    globals()[key.replace(" ", "_").upper()] = value
+

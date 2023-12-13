@@ -1,10 +1,10 @@
 from Case import Case
 from User import User
-
+from typing import List
 
 class CBR:
     
-    def __init__(self, cases: list[Case], user: User) -> None:
+    def __init__(self, cases: List[Case], user: User) -> None:
         self.cases = cases
         self.evaluations = [[] for _ in cases]
 
@@ -39,7 +39,7 @@ class CBR:
         """In this function we comnpare the cases we have with the new one and select the most similar."""
 
         similarities = []
-        for case in self.problems:
+        for case in self.cases:
             similarity = self.similarity_function(new_problem, case)
             similarities.append(similarity)
         
@@ -89,5 +89,5 @@ class CBR:
 
         new_problem_values = new_problem.get_list()
         case_values = case.get_list()
-
+        
         return sum(abs(new_problem_values[i] - case_values[i]) * weights[i] for i in range(len(new_problem)))
