@@ -45,6 +45,12 @@ COMEDY          = 'comedy'
 MYSTERY         = 'mystery'
 
 
+YEAR = 2023
+
+
+ANTIQUITY = ["Recently published", "1 - 2 years", "3 - 10 years", "10 - 50 years", "More than 50 years"]
+
+PAGES = ["0 - 100 pages", "100 - 300 pages", "300 - 600 pages", "More than 600 pages", "Unknown"]
 
 GENRES = [
     'speculative', 'science', 'fantasy', 'childrens', 'suspense', 'crime', 'thriller', 'historical',
@@ -55,8 +61,7 @@ GENRES = [
     'true', 'epic', 'comedy', 'mystery'
 ]
 
-genres_dict = dict(zip(GENRES, range(1, len(GENRES) + 1)))
+# genres_dict = dict(zip(GENRES, range(1, len(GENRES) + 1)))
 
-for key, value in genres_dict.items():
-    globals()[key.replace(" ", "_").upper()] = value
-
+# for key, value in genres_dict.items():
+#     globals()[key.replace(" ", "_").upper()] = key

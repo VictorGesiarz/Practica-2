@@ -4,39 +4,64 @@ import pandas as pd
 from ast import literal_eval
 from User import User
 from Case import Case
+from Book import Book
+from Constants import *
 
 
 
 class LoadData:
     
     @staticmethod
-    def load_data(path_cases = "./Code/Data/cases.csv", path_users = "./Code/Data/users.csv",):
+    def load_users(path_users = "./Code/Data/users.csv",):
         users_db = pd.read_csv(path_users)
         users_list = users_db.values.tolist()
         users = []
         for i in users_list:
             users.append(User(i[0], str(i[1]), i[2], i[3], literal_eval(i[4])))
-
+        return users
+    
+    @staticmethod
+    def load_cases(path_cases = "./Code/Data/cases.csv"):
         cases_db = pd.read_csv(path_cases)
         cases_list = cases_db.values.tolist()
         cases = []
         for i in cases_list:
             cases.append(Case(title=i[0], 
                               author=i[1], 
-                              publication_year=i[2], 
+                              antiquity=i[2], 
                               genres=literal_eval(i[3]),
+                              pages=i[4],
+                              bestseller=i[5],
+                              film=i[6],
+                              saga=i[7]))
+        return cases
+    
+    @staticmethod
+    def load_books(path_books = "./Code/Data/books.csv"):
+        books_db = pd.read_csv(path_books)
+        books_list = books_db.values.tolist()
+        books = []
+        for i in books_list:
+            books.append(Book(title=i[0], 
+                              author=i[1], 
+                              published_date=i[2],
+                              genres=literal_eval(i[3]),
+                              summary=i[4],
                               pages=i[5],
                               bestseller=i[6],
                               film=i[7],
-                              saga=i[8]))
-        return cases, users
-    
+                              saga=i[8],
+                              followed_by=i[9],
+                              preceeded_by=i[10]))
+        return books
+
     @staticmethod
     def write_data(cases, users, path_cases = "./Code/Data/cases.csv", path_users = "./Code/Data/users.csv"):
         cases_list = []
         for case in cases:
-            cases_list.append([case.title, case.author, case.pages, case.genres])
-        cases_columns = ["Title", "Author", "Pages", "Genres"]
+            case._transform_to_string()
+            cases_list.append([case.title, case.author, case.antiquity, case.genres, case.pages, case.bestseller, case.film, case.saga, case.evaluation_count, case.evaluation_mean])
+        cases_columns = ["Title", "Author", "Publication Year", "Genres", "Number of Pages", "Best Seller", "Film", "Saga", "Evaluation count", "Evaluation mean"]
         cases_df = pd.DataFrame(cases_list, columns=cases_columns)
         cases_df.to_csv(path_cases, index=False)
         

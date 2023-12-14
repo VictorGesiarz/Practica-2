@@ -210,13 +210,14 @@ class UserInteraction:
         questions_title = self.MP.read("Titles", "Questions Title")
         print(self.MP.h1(questions_title))
         
-        languages   = self.ask_question("Languages")
+        antiquity   = self.ask_question("Publication Year")
         pages       = self.ask_question("Pages")
+        genres      = self.ask_question("Genres")
         bestseller  = self.ask_question("Bestseller")
         film        = self.ask_question("Film")
         saga        = self.ask_question("Saga")
-        antiquity   = self.ask_question("Publication Year")
-        rating      = self.ask_question("Rating")
+
+        return antiquity, pages, genres, bestseller, film, saga
         
         # ['speculative',
         # 'science',

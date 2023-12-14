@@ -24,11 +24,6 @@
             "Options": ["LogIn", "SignIn", "Continue without identifying"],
             "Type": "Single Choice"
         },
-        "Languages": {
-            "Question": "Which languages do you know and prefer to read? \nChoose them one by one (or multiple separated by a space):",
-            "Options": ["arabic", "chinese", "english", "french", "german", "hindi", "japanese", "portuguese", "russian", "spanish", "swahili"],
-            "Type": "Multiple Choice"
-        },
         "Pages": {
             "Question": "How long do you want the book to be?",
             "Options": ["0 - 100 pages", "100 - 300 pages", "300 - 600 pages", "More than 600 pages"],
@@ -59,9 +54,10 @@
             "Options": ["Yes", "No"],
             "Type": "Single Choice"
         },
-        "": {
-            "Question": "",
-            "Options": []
+        "Genres": {
+            "Question": "What genres do you want?",
+            "Options": ["speculative", "science", "fantasy", "childrens", "suspense", "crime", "thriller", "historical", "young adult", "horror", "romance", "detective", "adventure", "spy", "alternate", "satire", "gothic", "techno", "war", "sword", "humour", "sorcery", "dystopia", "utopian", "high", "picture book", "western", "military", "black", "time travel", "apocalyptic", "hard", "magic", "realism", "steampunk", "literary", "epistolary", "drama", "erotic", "vampire", "cyberpunk", "true", "epic", "comedy", "mystery"],
+            "Type": "Multiple Choice"
         },
         "Recommendation Rating": {
             "Question": "How good was the recommendation? ",
