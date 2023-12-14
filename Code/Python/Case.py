@@ -49,6 +49,7 @@ class Case:
         
         if self.saga == "Yes": self.saga = 1 
         else: self.saga = 0
+        
 
 
 
