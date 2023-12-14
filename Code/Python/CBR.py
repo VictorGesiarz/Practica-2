@@ -1,16 +1,17 @@
 from Case import Case
+from Book import Book
 from User import User
 from typing import List
+import numpy as np
+
 
 class CBR:
     
-    def __init__(self, cases: List[Case], user: User) -> None:
+    def __init__(self, cases: List[Case], books: List[Book], user: User, MP) -> None:
         self.cases = cases
-        self.evaluations = [[] for _ in cases]
+        self.books = books
 
         self.length = len(cases)
-        
-        self.similarity_function = self.Manhattan
 
 
     def __repr__(self) -> str:
@@ -66,28 +67,44 @@ class CBR:
 
         """In this function we will evaluate the given solution by asking the user how good it was."""
         
-        evaluacion = int(input("Rate from 1 to 5 each of the recommendations: ")).split()
-        return evaluacion
+        evaluation = input("Rate from 1 to 5 each of the recommendations: ").split()
+        evaluation = [int(i) for i in evaluation]
+        return evaluation
 
 
     def __learn(self, new_problem, solutions, evaluations=[]):
         
         """In this function we save the new case with the corresponding solution and evaluation."""
 
-        for i in solutions:
-            self.cases.append(new_problem)
-            self.evaluations.append([evaluations[i]])   # GUARDAR LA MEDIA Y EL NUMERO DE EVALUACIONES PARA LUEGO PODER ACTUALIZARLO SI HACEMOS MAS EVALUACIONES
+        for i, solution in enumerate(solutions):
+            problem = new_problem.copy()
+            problem.evaluation_mean = (problem.evaluation_mean * problem.evaluation_count + evaluations[i]) / (problem.evaluation_count + 1)
+            problem.evaluation_count += 1
+
+            problem.title = self.cases[solution].title
+            problem.author = self.cases[solution].author
+            self.cases.append(problem)
 
             self.length += 1
 
 
-    def Manhattan(self, new_problem: Case, case: Case):
+    def similarity_function(self, new_problem: Case, case: Case):
         
         """Function to calculate the similarity between two cases. This function performs the Manhattan distance."""
 
-        weights = [1 for _ in range(len(new_problem))]
+        new_problem_values, new_problem_genres = new_problem.get_variables()
+        case_values, case_genres = case.get_variables()
+                
+        weights = [1/4, 1/4] + [1 for _ in range(2, len(new_problem_values))]
 
-        new_problem_values = new_problem.get_list()
-        case_values = case.get_list()
-        
-        return sum(abs(new_problem_values[i] - case_values[i]) * weights[i] for i in range(len(new_problem)))
+        manhattan_similarity = sum(abs(new_problem_values[i] - case_values[i]) * weights[i] for i in range(len(new_problem_values)))
+
+        genres_similarity = sum(new_problem_genres) - np.dot(np.array(new_problem_genres), np.array(case_genres))
+
+        new_problem_list = new_problem_values + new_problem_genres
+        case_list = case_values + case_genres
+        weights = [1/4, 1/4] + [1 for _ in range(2, len(new_problem_list))]
+
+        return sum(abs(new_problem_list[i] - case_list[i]) * weights[i] for i in range(len(new_problem_list)))
+
+        # return manhattan_similarity + genres_similarity
