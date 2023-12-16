@@ -2,6 +2,7 @@
 
 # Elbow method, silhouette method, gap statistic, Davies-Bouldin index, calinski-harabasz index, Dunn index
 
+import warnings
 from yellowbrick.cluster import KElbowVisualizer, SilhouetteVisualizer, InterclusterDistance
 from sklearn.metrics import davies_bouldin_score, adjusted_rand_score
 
@@ -56,37 +57,37 @@ def evaluate_clusters(X, model, k_range=(2, 10)):
     between-cluster distances.
     """
 
-
+    warnings.filterwarnings("ignore")
     # Elbow method
-    visualizer = KElbowVisualizer(model, k=k_range, metric="distortion")
-    visualizer.fit(X)
-    visualizer.show()
+    _ = visualizer = KElbowVisualizer(model, k=k_range, metric="distortion")
+    _ = visualizer.fit(X)
+    _ = visualizer.show()
 
     # Silhouette method
-    visualizer = KElbowVisualizer(model, k=k_range, metric="silhouette")
-    visualizer.fit(X)
-    visualizer.show()
+    _ = visualizer = KElbowVisualizer(model, k=k_range, metric="silhouette")
+    _ = visualizer.fit(X)
+    _ = visualizer.show()
 
     # Calinski-Harabasz Index
-    visualizer = KElbowVisualizer(model, k=k_range, metric="calinski_harabasz")
-    visualizer.fit(X)
-    visualizer.show()
+    _ = visualizer = KElbowVisualizer(model, k=k_range, metric="calinski_harabasz")
+    _ = visualizer.fit(X)
+    _ = visualizer.show()
 
-    # Davies-Bouldin Index
-    scores = []
-    for k in range(k_range[0], k_range[1]):
-        m = model(n_clusters=k, random_state=42)
-        m.fit(X)
+    # # Davies-Bouldin Index
+    # scores = []
+    # for k in range(k_range[0], k_range[1]):
+    #     m = model(n_clusters=k, random_state=42)
+    #     m.fit(X)
 
-        labels = m.labels_
-        score = davies_bouldin_score(X, labels)
-        scores.append(score)
+    #     labels = m.labels_
+    #     score = davies_bouldin_score(X, labels)
+    #     scores.append(score)
 
-    plt.plot(range(k_range[0], k_range[1]), scores)
-    plt.xlabel('Number of Clusters (k)')
-    plt.ylabel('Davies-Bouldin Score')
-    plt.title('Davies-Bouldin Score for Different Values of k')
-    plt.show()
+    # plt.plot(range(k_range[0], k_range[1]), scores)
+    # plt.xlabel('Number of Clusters (k)')
+    # plt.ylabel('Davies-Bouldin Score')
+    # plt.title('Davies-Bouldin Score for Different Values of k')
+    # plt.show()
 
 def profiling_clustering_num(data, num_vars, cluster_var='cluster', verbose=1):
     
@@ -111,11 +112,10 @@ def profiling_clustering_num(data, num_vars, cluster_var='cluster', verbose=1):
     plt.tight_layout()
     plt.show()
 
+
 def profiling_clustering_cats(data, cat_vars, cluster_var='cluster'):
 
-    fig, axes = plt.subplots(len(cat_vars), 1, figsize=(10, len(cat_vars) * 5))
-
-    for i, cat_var in enumerate(cat_vars):
+    for i, cat_var in enumerate(cat_vars):  
         
         fg = (data
         .groupby(cluster_var)[cat_var]
@@ -123,7 +123,7 @@ def profiling_clustering_cats(data, cat_vars, cluster_var='cluster'):
         .mul(100)
         .rename('percent')
         .reset_index()
-        .pipe((sns.catplot,'data'), x=cluster_var, y='percent', hue=cat_var, kind='bar', ax=axes[i]))
+        .pipe((sns.catplot,'data'), x=cluster_var, y='percent', hue=cat_var, kind='bar'))
 
         fg.fig.suptitle(f'Clusters by {cat_var}')
 
@@ -133,11 +133,14 @@ def profiling_clustering_cats(data, cat_vars, cluster_var='cluster'):
             for c in ax.containers:
 
                 # custom label calculates percent and add an empty string so 0 value bars don't have a number
-                labels = [f'{w:0.1f}%' if (w := v.get_height()) > 0 else '' for v in c]
+                labels = [f'{int(w):0}' if (w := v.get_height()) > 0 and w != 100 else '' for v in c]
 
                 _ = ax.bar_label(c, labels=labels, label_type='edge', fontsize=8, padding=2)
             
             _ = ax.margins(y=0.2)
+        
+        fg = sns.countplot(data=data, hue=cluster_var, x=cat_var)
+
 
     _ = plt.tight_layout()
     _ = plt.show()
