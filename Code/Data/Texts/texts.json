@@ -36,7 +36,7 @@
             "Type": "Single Choice"
         },
         "Film": {
-            "Question": "Do you want the book to be addapted to a film?",
+            "Question": "Do you want the book to be adapted to a film?",
             "Options": ["Yes", "No"],
             "Type": "Single Choice"
         },

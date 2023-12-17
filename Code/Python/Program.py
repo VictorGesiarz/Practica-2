@@ -13,7 +13,7 @@ class Program():
         self.path_cases = path_cases
         self.path_users = path_users
         
-        self.MP = MessagePrinter(LoadData.load_json(path_texts), 158)
+        self.MP = MessagePrinter(LoadData.load_json(path_texts))
         self.UI = UserInteraction(self.MP)
         
         title = LoadData.load_title_txt("./Code/Data/Texts/title.txt")
