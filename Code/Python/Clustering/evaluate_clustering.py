@@ -115,34 +115,50 @@ def profiling_clustering_num(data, num_vars, cluster_var='cluster', verbose=1):
 
 def profiling_clustering_cats(data, cat_vars, cluster_var='cluster'):
 
-    for i, cat_var in enumerate(cat_vars):  
-        
+    for i, cat_var in enumerate(cat_vars):
+        # Create subplots with one row and two columns
+        fig, axes = plt.subplots(1, 2, figsize=(15, 5))
+
+        # Plot the first bar plot using sns.catplot
         fg = (data
-        .groupby(cluster_var)[cat_var]
-        .value_counts(normalize=True)
-        .mul(100)
-        .rename('percent')
-        .reset_index()
-        .pipe((sns.catplot,'data'), x=cluster_var, y='percent', hue=cat_var, kind='bar'))
+                .groupby(cluster_var)[cat_var]
+                .value_counts(normalize=True)
+                .mul(100)
+                .rename('percent')
+                .reset_index()
+                .pipe((sns.barplot, 'data'), x=cluster_var, y='percent', hue=cat_var, ax=axes[0]))
 
-        fg.fig.suptitle(f'Clusters by {cat_var}')
+        fg.set_title(f'Clusters by {cat_var}')
 
-        for ax in fg.axes.ravel():
+        # Add annotations
+        for p in fg.patches:
+            if p.get_height() > 0 and p.get_height() != 100:      
+                fg.annotate(f'{int(p.get_height())}', (p.get_x() + p.get_width() / 2., p.get_height()),
+                            ha='center', va='center', xytext=(0, 10), textcoords='offset points')
+        axes[0].legend(title=cat_var, loc='upper right', bbox_to_anchor=(1.25, 1))
 
-            # add annotations
-            for c in ax.containers:
-
-                # custom label calculates percent and add an empty string so 0 value bars don't have a number
-                labels = [f'{int(w):0}' if (w := v.get_height()) > 0 and w != 100 else '' for v in c]
-
-                _ = ax.bar_label(c, labels=labels, label_type='edge', fontsize=8, padding=2)
-            
-            _ = ax.margins(y=0.2)
-        
-        fg = sns.countplot(data=data, hue=cluster_var, x=cat_var)
+        fg = (data
+                .groupby(cluster_var)[cat_var]
+                .value_counts(normalize=True)
+                .mul(100)
+                .rename('percent')
+                .reset_index()
+                .pipe((sns.barplot, 'data'), hue=cluster_var, y='percent', x=cat_var, ax=axes[1]))
 
 
-    _ = plt.tight_layout()
-    _ = plt.show()
+        for p in fg.patches:
+            if p.get_height() > 0 and p.get_height() != 100:      
+                fg.annotate(f'{int(p.get_height())}', (p.get_x() + p.get_width() / 2., p.get_height()),
+                            ha='center', va='center', xytext=(0, 10), textcoords='offset points')
+                
+        # Set title for the count plot
+        axes[1].set_title(f'Count of {cat_var} by {cluster_var}')
+        axes[1].legend(title=cluster_var, loc='upper right', bbox_to_anchor=(1.5, 1), ncol=3)
+
+        # Adjust layout
+        plt.tight_layout()
+
+        # Show the plots
+        plt.show()
 
     
