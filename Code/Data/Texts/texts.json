@@ -16,7 +16,8 @@
     },
     "Errors": {
         "Invalid Options": "The following options are not valid! ¯|_(ツ)_/¯ Please, try again ^^\nInvalid options: {}",
-        "No Languages Selected": "Thank you for providing your language preference!\nSince you don't know any of the languages, we cannot recommend you any book.\nWe are really sorry to see you go! ˙◠˙"
+        "No Languages Selected": "Thank you for providing your language preference!\nSince you don't know any of the languages, we cannot recommend you any book.\nWe are really sorry to see you go! ˙◠˙",
+        "Missing Options": "You have to select at least 3 genres to continue."
     },
     "Questions": {
         "Login": {

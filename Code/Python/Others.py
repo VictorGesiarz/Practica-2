@@ -90,13 +90,23 @@ class LoadData:
         
 
 
+import shutil
+terminal_size = shutil.get_terminal_size()
+terminal_width = terminal_size.columns
+terminal_height = terminal_size.lines
+
 P_WIDTH = 75
+H_WIDTH = 158
+H1_WIDTH = 125
+H2_WIDTH = 100
+E_WIDTH = P_WIDTH
+MAX_WIDTH = terminal_width
 class MessagePrinter:
     
-    def __init__(self, messages, max_width = 158, center = True):
+    def __init__(self, messages, center = True):
         
         self.__messages = messages
-        self.max_width = max_width
+        self.max_width = MAX_WIDTH
         self.center_everything = center
         
 
@@ -157,23 +167,23 @@ class MessagePrinter:
         return message
 
         
-    def h(self, message, additional_message=False, width=158, padding=3, p_padding=1, fill=True):
+    def h(self, message, additional_message=False, width=H_WIDTH, padding=3, p_padding=1, fill=True):
         m1 = self.square(message, additional_message=additional_message, style="h", width=width-8, padding=0, p_padding=p_padding, fill=fill, pad=False)
         m2 = self.square(m1, style="h", width=width-4, padding=0, p_padding=0, fill=fill, pad=False)
         m3 = self.square(m2, style="h", width=width, padding=padding, p_padding=0, fill=fill, pad=False)
-        return m3
+        return self.t(m3, width=width)
 
 
     def h1(self, message, additional_message=False, center=True):
-        return self.p_l(message, additional_message=additional_message, style="h1", width=125, padding=2, p_padding=1, center=center)
+        return self.p_l(message, additional_message=additional_message, style="h1", width=H1_WIDTH, padding=2, p_padding=1, center=center)
 
 
     def h2(self, message, additional_message=False, center=True):
-        return self.p_l(message, additional_message=additional_message, style="h2", width=100, padding=1, center=center)
+        return self.p_l(message, additional_message=additional_message, style="h2", width=H2_WIDTH, padding=1, center=center)
     
     
     def e(self, message, additional_message=False, center=True):
-        return self.p_l(message, additional_message=additional_message, style="e", width=P_WIDTH, padding=1, center=center)
+        return self.p_l(message, additional_message=additional_message, style="e", width=E_WIDTH, padding=1, center=center)
 
 
     def square(self, message, additional_message=False, style="s", width=35, padding=1, p_padding=0, fill=True, pad=True):
