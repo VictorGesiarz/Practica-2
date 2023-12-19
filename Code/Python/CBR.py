@@ -77,12 +77,6 @@ class CBR:
 
         """In this function we take the case with the best solution."""
 
-        # averages = []
-        # for case in retrieved_cases:
-        #     averages.append(sum(evaluation for evaluation in self.evaluations[case]) / len(self.evaluations[case]))
-
-        # index = averages.index(max(averages))
-
         matrix_dist = []
 
         rating_list = []
@@ -110,8 +104,6 @@ class CBR:
         if not evaluation:
             evaluation = input("Rate from 1 to 5 each of the recommendations: ").split()
             evaluation = [int(i) for i in evaluation]
-        
-        
         return evaluation
 
 
@@ -123,17 +115,15 @@ class CBR:
 
         if min_dist > self.gamma:
 
-        for i, solution in enumerate(solutions):
-            problem = new_problem.copy()
-            print(problem)
-            problem.evaluation_mean = (problem.evaluation_mean * problem.evaluation_count + evaluations[i]) / (problem.evaluation_count + 1)
-            problem.evaluation_count += 1
+            for i, solution in enumerate(solutions):
+                problem = new_problem.copy()
+                problem.evaluation_mean = (problem.evaluation_mean * problem.evaluation_count + evaluations[i]) / (problem.evaluation_count + 1)
+                problem.evaluation_count += 1
 
-            case = self.cluster.get_case(cluster, solution)
-            problem.title = case.title
-            problem.author = case.author
-            print(problem)
-            self.cluster.add_case(cluster, problem)
+                case = self.cluster.get_case(cluster, solution)
+                problem.title = case.title
+                problem.author = case.author
+                self.cluster.add_case(cluster, problem)
 
 
     def similarity_function(self, new_problem: Case, case: Case):
