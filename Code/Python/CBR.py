@@ -16,11 +16,16 @@ import random
 
 class CBR:
     
-    def __init__(self, cluster: Clusters, books: List[Book], user: User, UI: UserInteraction=None, gamma = 0) -> None:
+    def __init__(self, cluster: Clusters, books: List[Book], user: User, UI: UserInteraction=None, gamma = 3, forget_rate = 25, forget_minimum = 2.5, rating_weight = 0.8) -> None:
         self.cluster = cluster
         self.books = books
-        self.gamma = gamma
         self.user = user
+
+        self.gamma = gamma
+        
+        self.forget_rate = forget_rate
+        self.forget_minimum = forget_minimum
+        self.rating_weight = rating_weight
 
         self.UI = UI
 
@@ -194,7 +199,7 @@ class CBR:
         matrix_dist_array = np.array(matrix_dist)
         ratings_array = np.array(rating_list)
         
-        dist_w = 1
+        dist_w = self.rating_weight
 
         eps = 0.00005 # Evitar divisiones entre 0
         matrix_dist_array = matrix_dist_array + eps
@@ -239,7 +244,6 @@ class CBR:
 
         min_dist = min(matrix_dist)
 
-        max_index = -1
         if min_dist >= self.gamma:
             max_index = evaluations.index(max(evaluations))
 
@@ -260,8 +264,13 @@ class CBR:
                     case.evaluation_count += 1
 
 
-    def utility_mesure(self, case):
-        ...
+    def __is_useless(self, case):
+        count = case.evaluation_count
+        mean = case.evaluation_mean
+
+        if count > self.forget_rate and mean < self.forget_minimum:
+            return True
+        return False
 
 
     def similarity_function(self, new_problem: Case, case: Case, weights: List[float]=None):

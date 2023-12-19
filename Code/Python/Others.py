@@ -60,12 +60,14 @@ class LoadData:
                               published_date=i[2],
                               genres=literal_eval(i[3]),
                               summary=i[4],
-                              pages=i[5],
-                              bestseller=i[6],
-                              film=i[7],
-                              saga=i[8],
-                              followed_by=i[9],
-                              preceeded_by=i[10]))
+                              rating_count=i[5],
+                              rating_mean=i[6],
+                              pages=i[7],
+                              bestseller=i[8],
+                              film=i[9],
+                              saga=i[10],
+                              followed_by=i[11],
+                              preceeded_by=i[12]))
         return books
 
 

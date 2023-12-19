@@ -11,6 +11,8 @@ class Book:
                  author: str,
                  summary: str,
                  published_date: int,
+                 rating_count: int,
+                 rating_mean: int,
                  pages: str, 
                  genres: List[str],
                  bestseller: str,
@@ -31,6 +33,8 @@ class Book:
         self.saga = saga
         self.followed_by = followed_by
         self.preceeded_by = preceeded_by
+        self.rating_count = rating_count
+        self.rating_mean = rating_mean
 
 
     def __repr__(self) -> str:
