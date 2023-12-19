@@ -133,11 +133,11 @@ class CBR:
         new_problem_values, new_problem_genres = new_problem.get_variables()
         case_values, case_genres = case.get_variables()
                 
-        weights = [1/4, 1/4] + [1 for _ in range(2, len(new_problem_values))]
+        # weights = [1/4, 1/4] + [1 for _ in range(2, len(new_problem_values))]
 
-        manhattan_similarity = sum(abs(new_problem_values[i] - case_values[i]) * weights[i] for i in range(len(new_problem_values)))
+        # manhattan_similarity = sum(abs(new_problem_values[i] - case_values[i]) * weights[i] for i in range(len(new_problem_values)))
 
-        genres_similarity = sum(new_problem_genres) - np.dot(np.array(new_problem_genres), np.array(case_genres))
+        # genres_similarity = sum(new_problem_genres) - np.dot(np.array(new_problem_genres), np.array(case_genres))
 
         new_problem_list = new_problem_values + new_problem_genres
         case_list = case_values + case_genres
