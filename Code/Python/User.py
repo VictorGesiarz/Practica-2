@@ -1,7 +1,14 @@
+import sys
+import os
+current_file_path = os.path.abspath(__file__)
+code_directory = os.path.abspath(os.path.join(current_file_path, '..', '..'))
+sys.path.append(code_directory)
+
+from Python.Constants import *
+
 import hashlib
 import getpass
 from typing import List
-
 
 class User:
     
@@ -144,16 +151,17 @@ class UserInteraction:
                 print(self.MP.e(error_string, additional_message=", ".join([str(i) for i in invalid_options]), center=False))
 
 
-    def ask_multiple_choice_question(self, question, answers_range=False):
+    def ask_multiple_choice_question(self, question):
 
         answer = []
         
         options = self.MP.read("Questions", question, "Options") + ["No More"]
         question_string = self.MP.read("Questions", question, "Question")
+        question_range = self.MP.read("Questions", question, "Range")
         missing_options = self.MP.read("Errors", "Missing Options")
         error_string = self.MP.read("Errors", "Invalid Options")
 
-        if answers_range: question_string += f' Select between {answers_range[0]} and {answers_range[1]}'
+        if question_range: question_string += f' Select between {question_range[0]} and {question_range[1]}'
 
         finish = False
         while not finish: 
@@ -175,15 +183,15 @@ class UserInteraction:
                     if i not in available_options.keys():
                         invalid_options.append(i)
                     elif i == len(options) - 1: 
-                        if len(answer) < answers_range[0]:
-                            print(self.MP.e(missing_options, additional_message=str(answers_range[0]), center=False))                  
+                        if len(answer) < question_range[0]:
+                            print(self.MP.e(missing_options, additional_message=str(question_range[0]), center=False))                  
                         else:
                             finish = True
                             break
                     else:
                         answer.append(options[i])
                     
-                    if len(answer) >= answers_range[1]:
+                    if len(answer) >= question_range[1]:
                         finish = True
                         break
                 else: 
@@ -196,20 +204,34 @@ class UserInteraction:
                 print(self.MP.e(error_string, additional_message=", ".join([str(i) for i in invalid_options]), center=False))
 
         print(self.MP.p(f'Chosen options: {" / ".join(answer)}'))
+        print()
         return answer
 
 
-    def ask_range_question(self, question):
-        ...
+    def ask_range_question(self, question, additional_message=""):
+        
+        while True:
+            question_string = self.MP.read("Questions", question, "Question")
+            question_range = self.MP.read("Questions", question, "Range")
+            error_string = self.MP.read("Errors", "Invalid Options")
+            answer = input(self.MP.p(question_string, additional_message=additional_message, padding=1, width=H2_WIDTH))
+            
+            if answer.isnumeric():
+                answer = int(answer)
+
+                if question_range[0] <= answer <= question_range[1]:
+                    return answer
+                
+            print(self.MP.e(error_string, additional_message=answer, center=False))
         
         
-    def ask_question(self, question, answers_range=False): 
+    def ask_question(self, question): 
         question_type = self.MP.read("Questions", question, "Type")
         
         if question_type == "Single Choice":
             return self.ask_single_choice_question(question)
         elif question_type == "Multiple Choice":
-            return self.ask_multiple_choice_question(question, answers_range=answers_range)
+            return self.ask_multiple_choice_question(question)
         elif question_type == "Range":
             return self.ask_range_question(question)
         
@@ -220,7 +242,7 @@ class UserInteraction:
         
         antiquity   = self.ask_question("Publication Year")
         pages       = self.ask_question("Pages")
-        genres      = self.ask_question("Genres", answers_range=[3, 6])
+        genres      = self.ask_question("Genres")
         bestseller  = self.ask_question("Bestseller")
         film        = self.ask_question("Film")
         saga        = self.ask_question("Saga")

@@ -31,3 +31,11 @@ class Book:
         self.saga = saga
         self.followed_by = followed_by
         self.preceeded_by = preceeded_by
+
+
+    def __repr__(self) -> str:
+        line1 = f'Book NAME: {self.title}, written BY: {self.author} and was PUBLISHED in: {self.published_date}. \n'
+        line2 = f'Has {self.pages} PAGES and the GENRES are {", ".join(self.genres)}\n'
+        line3 = f'Bestseller: {self.bestseller}, FILM: {self.film}, SAGA: {self.saga}. \n\n'
+        line4 = f'SUMMARY: {self.summary}\n'
+        return line1 + line2 + line3 + line4

@@ -11,6 +11,7 @@
         "Main Title": "Welcome to the BookFinder!",
         "Login Title": "Lets start by identifying you.",
         "Questions Title": "Now we will proceed to ask a few questions about your preferences for the book you are searching for.",
+        "Recommendations Title": "These are the best books we have found for you!",
         "Review Title": "Now we want to know what you think of out recommendation.",
         "End": "Thank you for using our recommender!\nWe hope to see you again."
     },
@@ -58,11 +59,12 @@
         "Genres": {
             "Question": "What genres do you want?",
             "Options": ["speculative", "science", "fantasy", "childrens", "suspense", "crime", "thriller", "historical", "young adult", "horror", "romance", "detective", "adventure", "spy", "alternate", "satire", "gothic", "techno", "war", "sword", "humour", "sorcery", "dystopia", "utopian", "high", "picture book", "western", "military", "black", "time travel", "apocalyptic", "hard", "magic", "realism", "steampunk", "literary", "epistolary", "drama", "erotic", "vampire", "cyberpunk", "true", "epic", "comedy", "mystery"],
-            "Type": "Multiple Choice"
+            "Type": "Multiple Choice",
+            "Range": [3, 6]
         },
-        "Recommendation Rating": {
-            "Question": "How good was the recommendation? ",
-            "Range": [0, 5],
+        "Evaluate": {
+            "Question": "In a scale from 0 to 10, how good was {}? ",
+            "Range": [0, 10],
             "Type": "Range"
         }
     }

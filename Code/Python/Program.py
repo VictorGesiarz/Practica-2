@@ -36,14 +36,12 @@ class Program():
 
         self.clusters = Clusters(self.cases, count, path_cluster, train_on_innit=False)
         
-        self.CBR = CBR(self.clusters, self.books, self.user, self.MP)
+        self.CBR = CBR(self.clusters, self.books, self.user, self.UI)
         
         
     def main_loop(self):
         antiquity, pages, genres, bestseller, film, saga = self.UI.ask_questions()
         new_case = Case("", "", antiquity=antiquity, pages=pages, genres=genres, bestseller=bestseller, film=film, saga=saga, user_age=20)
-        print(new_case)
-
         self.cluster = self.CBR.run(new_case)
         self.end()
         

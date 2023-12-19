@@ -13,3 +13,28 @@ GENRES = [
     'true', 'epic', 'comedy', 'mystery'
 ]
 
+
+# ----------------------------------------------------------------------------------------------------------------
+
+
+import shutil
+terminal_size = shutil.get_terminal_size()
+terminal_width = terminal_size.columns
+terminal_height = terminal_size.lines
+
+
+P_WIDTH = 75
+H_WIDTH = 158
+H1_WIDTH = 125
+H2_WIDTH = 100
+E_WIDTH = P_WIDTH
+MAX_WIDTH = terminal_width
+
+
+# Adaptado al tamaño de un documento word
+# P_WIDTH = 50
+# H_WIDTH = 158
+# H1_WIDTH = 100
+# H2_WIDTH = 75
+# E_WIDTH = P_WIDTH
+# MAX_WIDTH = 100

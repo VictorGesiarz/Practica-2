@@ -8,8 +8,10 @@ sys.path.append(code_directory)
 from kmodes.kmodes import KModes
 from Python.Case import Case
 from Python.Book import Book
-from Python.User import User
+from Python.User import User, UserInteraction
 from Python.Clusters import Clusters
+from Python.Others import MessagePrinter
+from Python.Constants import *
 from typing import List
 import numpy as np
 import random 
@@ -17,11 +19,13 @@ import random
 
 class CBR:
     
-    def __init__(self, cluster: Clusters, books: List[Book], user: User, MP=None, gamma = 0) -> None:
+    def __init__(self, cluster: Clusters, books: List[Book], user: User, UI: UserInteraction=None, gamma = 0) -> None:
         self.cluster = cluster
         self.books = books
         self.gamma = gamma
 
+        self.UI = UI
+        self.MP = self.UI.MP
 
 
     def __len__(self):
@@ -42,10 +46,9 @@ class CBR:
         solutions, matrix_dist = self.__adapt(new_problem, retrieved_cases)
 
         if not ratings:
-            for case in solutions:
-                print(f"We recommend you to read: {case}")
+            self.__print_recommendations(solutions)
 
-        evaluations = self.__evaluate(ratings)
+        evaluations = self.__evaluate(solutions, ratings)
         
         self.__learn(cluster, new_problem, matrix_dist, solutions, evaluations)
 
@@ -54,6 +57,22 @@ class CBR:
 
         return self.cluster
     
+
+    def __print_recommendations(self, solutions):
+        section_title = self.MP.read("Titles", "Recommendations Title")
+        print(self.MP.h1(section_title))
+        print(self.MP.l(style="h2", width=H2_WIDTH))
+
+        for case in solutions:
+            title = case.title
+            for book in self.books:
+                if book.title == title:
+                    break
+            print(self.MP.p(f'{book}', width=H2_WIDTH, padding=1))
+
+        print(self.MP.l(style="h2", width=H2_WIDTH))
+        print()
+        
 
     def __retrieve(self, new_problem):
 
@@ -82,7 +101,7 @@ class CBR:
         matrix_dist_array = np.array(matrix_dist)
         ratings_array = np.array(rating_list)
         
-        dist_w = 0.95
+        dist_w = 1
 
         eps = 0.00005 # Evitar divisiones entre 0
         matrix_dist_array = matrix_dist_array + eps
@@ -101,14 +120,16 @@ class CBR:
         return solutions, matrix_dist
 
 
-    def __evaluate(self, evaluation=None):
+    def __evaluate(self, solutions, evaluations=None):
 
         """In this function we will evaluate the given solution by asking the user how good it was."""
         
-        if not evaluation:
-            evaluation = input("Rate from 1 to 5 each of the recommendations: ").split()
-            evaluation = [int(i) for i in evaluation]
-        return evaluation
+        if not evaluations:
+            evaluations = []
+            for solution in solutions:
+                evaluation = self.UI.ask_range_question("Evaluate", additional_message=solution.title)
+                evaluations.append(evaluation)
+        return evaluations
 
 
     def __learn(self, cluster, new_problem, matrix_dist, solutions, evaluations=[]):
@@ -117,16 +138,24 @@ class CBR:
 
         min_dist = min(matrix_dist)
 
-        if min_dist > self.gamma:
+        max_index = -1
+        if min_dist >= self.gamma:
+            max_index = evaluations.index(max(evaluations))
 
-            for i, case in enumerate(solutions):
-                problem = new_problem.copy()
-                problem.evaluation_mean = (problem.evaluation_mean * problem.evaluation_count + evaluations[i]) / (problem.evaluation_count + 1)
-                problem.evaluation_count += 1
+            reference_case = solutions[max_index]
+            case_to_add = new_problem.copy()
+            case_to_add.evaluation_mean = (case_to_add.evaluation_mean * case_to_add.evaluation_count + evaluations[max_index]) / (case_to_add.evaluation_count + 1)
+            case_to_add.evaluation_count += 1
+            case_to_add.title = reference_case.title
+            case_to_add.author = reference_case.author
+            self.cluster.add_case(cluster, case_to_add)
 
-                problem.title = case.title
-                problem.author = case.author
-                self.cluster.add_case(cluster, problem)
+            self.MP.e("CASE ADDED TO DATA BASE")
+
+        for i, case in enumerate(solutions):
+            if i != max_index:
+                case.evaluation_mean = (case.evaluation_mean * case.evaluation_count + evaluations[i]) / (case.evaluation_count + 1)
+                case.evaluation_count += 1
 
 
     def similarity_function(self, new_problem: Case, case: Case):
