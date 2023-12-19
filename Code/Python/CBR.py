@@ -62,15 +62,6 @@ class CBR:
 
         retrieved_cases = self.cluster.tree[cluster]
 
-        # similarities = []
-
-        # for case in cases:
-        #     similarity = self.similarity_function(new_problem, case)
-        #     similarities.append(similarity)
-        
-        # x = 3
-        # sorted_indices = sorted(range(len(similarities)), key=lambda k: similarities[k])[:x]
-
         return cluster, retrieved_cases
 
 
@@ -90,11 +81,8 @@ class CBR:
 
         matrix_dist_array = np.array(matrix_dist)
         ratings_array = np.array(rating_list)
-        # print("-----------------------------------------------------------------------")
-        # print(ratings_array)
         
-
-        dist_w = 0.8
+        dist_w = 0.95
 
         eps = 0.00005 # Evitar divisiones entre 0
         matrix_dist_array = matrix_dist_array + eps
@@ -104,7 +92,12 @@ class CBR:
 
         probabilities =  x + y 
 
-        solutions = random.choices(retrieved_cases, weights=probabilities, k=3)
+        solutions = []
+
+        for _ in range(3):
+            index = random.choices(range(len(retrieved_cases)), weights=probabilities, k=1)[0]
+            solutions.append(retrieved_cases[index])
+            probabilities[index] = 0
 
         return solutions, matrix_dist
 
@@ -131,7 +124,6 @@ class CBR:
                 problem.evaluation_mean = (problem.evaluation_mean * problem.evaluation_count + evaluations[i]) / (problem.evaluation_count + 1)
                 problem.evaluation_count += 1
 
-                # case = self.cluster.get_case(cluster, solution)
                 problem.title = case.title
                 problem.author = case.author
                 self.cluster.add_case(cluster, problem)

@@ -46,6 +46,15 @@ class Clusters:
         self.tree[cluster].append(case)
 
         self.recreate_clusters()
+    
+        
+
+    def remove_case(self, cluster, case):
+        # we have add a change in the clusters
+        self.count += 1
+        self.cases.remove(case)
+        self.tree[cluster].remove(case)
+        self.recreate_clusters()
 
 
     def get_case(self, cluster, index):
