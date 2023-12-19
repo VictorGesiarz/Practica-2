@@ -1,6 +1,13 @@
+import sys
+import os
+current_file_path = os.path.abspath(__file__)
+code_directory = os.path.abspath(os.path.join(current_file_path, '..', '..'))
+sys.path.append(code_directory)
+
+
 import pandas as pd
 from typing import List, Optional
-from Constants import * 
+from Python.Constants import * 
 
 
 class Case:
@@ -16,7 +23,7 @@ class Case:
                  saga: str,
                  evaluation_count: int = 0,
                  evaluation_mean: int = 0,
-                 user_age: int = 20
+                 user_age: int = 20,
                  ) -> None:
 
         self.title = title                          # This element is the solution
@@ -39,7 +46,7 @@ class Case:
 
     def __repr__(self) -> str:
         line1 = f'Book NAME: {self.title}, written BY: {self.author} and was PUBLISHED: {ANTIQUITY[self.antiquity]}. \nHas {PAGES[self.pages]} PAGES and the GENRES are {", ".join([GENRES[i] for i, genre in enumerate(self.genres) if genre])}\n'
-        line2 = f'Bestseller: {self.bestseller}, FILM: {self.film}, SAGA: {self.saga}\n\n'
+        line2 = f'Bestseller: {self.bestseller}, FILM: {self.film}, SAGA: {self.saga}. Mean eval: {self.evaluation_mean} from {self.evaluation_count} reviews. \n\n'
         return line1 + line2
     
 

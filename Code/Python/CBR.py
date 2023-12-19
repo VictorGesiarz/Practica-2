@@ -1,6 +1,15 @@
-from Case import Case
-from Book import Book
-from User import User
+import sys
+import os
+current_file_path = os.path.abspath(__file__)
+code_directory = os.path.abspath(os.path.join(current_file_path, '..', '..'))
+sys.path.append(code_directory)
+
+
+from kmodes.kmodes import KModes
+from Python.Case import Case
+from Python.Book import Book
+from Python.User import User
+from Python.Clusters import Clusters
 from typing import List
 import numpy as np
 import random 
@@ -8,13 +17,15 @@ import random
 
 class CBR:
     
-    def __init__(self, cases: List[Case], books: List[Book], user: User, MP=None, gamma = 0) -> None:
-        self.cases = cases
+    def __init__(self, cluster: Clusters, books: List[Book], user: User, MP=None, gamma = 0) -> None:
+        self.cluster = cluster
         self.books = books
         self.gamma = gamma
 
+
     def __len__(self):
-        return len(self.cases)
+        return len(self.cluster)
+
 
     def __repr__(self) -> str:
         print("\n\n")
@@ -26,34 +37,40 @@ class CBR:
 
     # the ratings is used to test the system
     def run(self, new_problem: Case, ratings=None):
-        retrieved_cases = self.__retrieve(new_problem)
+        cluster, retrieved_cases = self.__retrieve(new_problem)
         solutions, matrix_dist = self.__adapt(new_problem, retrieved_cases)
 
         if not ratings:
             for i in solutions:
-                print(f"We recommend you to read: {self.cases[i]}")
+                print(f"We recommend you to read: {self.cluster.get_case(cluster, i)}")
 
         evaluations = self.__evaluate(ratings)
         
-        self.__learn(new_problem, matrix_dist, solutions, evaluations)
+        self.__learn(cluster, new_problem, matrix_dist, solutions, evaluations)
 
         if ratings:
             return retrieved_cases
+
+        return self.cluster
     
 
     def __retrieve(self, new_problem):
 
         """In this function we comnpare the cases we have with the new one and select the most similar."""
 
+        cluster = self.cluster.predict([new_problem])[0]
+
+        cases = self.cluster.tree[cluster]
+
         similarities = []
-        for case in self.cases:
+        for case in cases:
             similarity = self.similarity_function(new_problem, case)
             similarities.append(similarity)
         
         x = 3
         sorted_indices = sorted(range(len(similarities)), key=lambda k: similarities[k])[:x]
 
-        return sorted_indices
+        return cluster, sorted_indices
 
 
     def __adapt(self, new_problem, retrieved_cases):
@@ -98,7 +115,7 @@ class CBR:
         return evaluation
 
 
-    def __learn(self, new_problem, matrix_dist, solutions, evaluations=[]):
+    def __learn(self, cluster, new_problem, matrix_dist, solutions, evaluations=[]):
         
         """In this function we save the new case with the corresponding solution and evaluation."""
 
@@ -106,15 +123,17 @@ class CBR:
 
         if min_dist > self.gamma:
 
-            for i, solution in enumerate(solutions):
-                problem = new_problem.copy()
-                problem.evaluation_mean = (problem.evaluation_mean * problem.evaluation_count + evaluations[i]) / (problem.evaluation_count + 1)
-                problem.evaluation_count += 1
+        for i, solution in enumerate(solutions):
+            problem = new_problem.copy()
+            print(problem)
+            problem.evaluation_mean = (problem.evaluation_mean * problem.evaluation_count + evaluations[i]) / (problem.evaluation_count + 1)
+            problem.evaluation_count += 1
 
-                problem.title = self.cases[solution].title
-                problem.author = self.cases[solution].author
-                self.cases.append(problem)
-
+            case = self.cluster.get_case(cluster, solution)
+            problem.title = case.title
+            problem.author = case.author
+            print(problem)
+            self.cluster.add_case(cluster, problem)
 
 
     def similarity_function(self, new_problem: Case, case: Case):

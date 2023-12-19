@@ -1,11 +1,18 @@
+import sys
+import os
+current_file_path = os.path.abspath(__file__)
+code_directory = os.path.abspath(os.path.join(current_file_path, '..', '..'))
+sys.path.append(code_directory)
+
 import json
 import textwrap
+import numpy as np
 import pandas as pd
 from ast import literal_eval
-from User import User
-from Case import Case
-from Book import Book
-from Constants import *
+from Python.User import User
+from Python.Case import Case
+from Python.Book import Book
+from Python.Constants import *
 
 
 
@@ -20,10 +27,13 @@ class LoadData:
             users.append(User(i[0], str(i[1]), i[2], i[3], literal_eval(i[4])))
         return users
     
+
     @staticmethod
-    def load_cases(path_cases = "./Code/Data/cases.csv"):
+    def load_cases(path_cases = "./Code/Data/cluster_cases.csv"):
         cases_db = pd.read_csv(path_cases)
         cases_list = cases_db.values.tolist()
+        count = cases_list[0][0]
+        cases_list = cases_list[1:]
         cases = []
         for i in cases_list:
             cases.append(Case(title=i[0], 
@@ -33,9 +43,12 @@ class LoadData:
                               pages=i[4],
                               bestseller=i[5],
                               film=i[6],
-                              saga=i[7]))
-        return cases
+                              saga=i[7], 
+                              evaluation_count=float(i[8]),
+                              evaluation_mean=float(i[9])))
+        return cases, int(float(count))
     
+
     @staticmethod
     def load_books(path_books = "./Code/Data/books.csv"):
         books_db = pd.read_csv(path_books)
@@ -55,16 +68,19 @@ class LoadData:
                               preceeded_by=i[10]))
         return books
 
+
     @staticmethod
-    def write_data(cases, users, path_cases = "./Code/Data/cases.csv", path_users = "./Code/Data/users.csv"):
-        cases_list = []
+    def write_cases(cases, count, path_cases = "./Code/Data/cases.csv"):
+        cases_columns = ["Title", "Author", "Publication Year", "Genres", "Number of Pages", "Best Seller", "Film", "Saga", "Evaluation count", "Evaluation mean"]
+        cases_list = [[count] + [np.nan] * (len(cases_columns) - 1)]
         for case in cases:
             case._transform_to_string()
             cases_list.append([case.title, case.author, case.antiquity, case.genres, case.pages, case.bestseller, case.film, case.saga, case.evaluation_count, case.evaluation_mean])
-        cases_columns = ["Title", "Author", "Publication Year", "Genres", "Number of Pages", "Best Seller", "Film", "Saga", "Evaluation count", "Evaluation mean"]
         cases_df = pd.DataFrame(cases_list, columns=cases_columns)
         cases_df.to_csv(path_cases, index=False)
         
+    @staticmethod
+    def write_users(users, path_users = "./Code/Data/users.csv"):
         users_list = []
         for user in users:
             users_list.append([user.username, user.password, user.gender, user.age, user.books_read])
@@ -72,6 +88,7 @@ class LoadData:
         users_df = pd.DataFrame(users_list, columns=users_columns)
         users_df.to_csv(path_users, index=False)
         
+
     @staticmethod
     def load_json(filename = "./Code/Data/texts.json"):
         try:
@@ -81,6 +98,7 @@ class LoadData:
             print("Error: Messages file not found.")
             return {}
         
+
     @staticmethod
     def load_title_txt(filename = "./Code/Data/title.txt"):
         with open(filename, 'r', encoding="UTF-8") as file:
