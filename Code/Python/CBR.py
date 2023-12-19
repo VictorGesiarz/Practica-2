@@ -23,6 +23,7 @@ class CBR:
         self.gamma = gamma
 
 
+
     def __len__(self):
         return len(self.cluster)
 
@@ -31,7 +32,7 @@ class CBR:
         print("\n\n")
         print("This CBR contains the next cases: \n")
         for i in range(len(self)):
-            print(f'{self.cases[i]}, with an evaluation of {self.evaluations[i]}')
+            print(f'{self.cluster[i]}, with an evaluation of {self.evaluations[i]}')
         print("\n\n")
         return ""
 
@@ -41,8 +42,8 @@ class CBR:
         solutions, matrix_dist = self.__adapt(new_problem, retrieved_cases)
 
         if not ratings:
-            for i in solutions:
-                print(f"We recommend you to read: {self.cluster.get_case(cluster, i)}")
+            for case in solutions:
+                print(f"We recommend you to read: {case}")
 
         evaluations = self.__evaluate(ratings)
         
@@ -57,20 +58,20 @@ class CBR:
     def __retrieve(self, new_problem):
 
         """In this function we comnpare the cases we have with the new one and select the most similar."""
-
         cluster = self.cluster.predict([new_problem])[0]
 
-        cases = self.cluster.tree[cluster]
+        retrieved_cases = self.cluster.tree[cluster]
 
-        similarities = []
-        for case in cases:
-            similarity = self.similarity_function(new_problem, case)
-            similarities.append(similarity)
+        # similarities = []
+
+        # for case in cases:
+        #     similarity = self.similarity_function(new_problem, case)
+        #     similarities.append(similarity)
         
-        x = 3
-        sorted_indices = sorted(range(len(similarities)), key=lambda k: similarities[k])[:x]
+        # x = 3
+        # sorted_indices = sorted(range(len(similarities)), key=lambda k: similarities[k])[:x]
 
-        return cluster, sorted_indices
+        return cluster, retrieved_cases
 
 
     def __adapt(self, new_problem, retrieved_cases):
@@ -78,24 +79,34 @@ class CBR:
         """In this function we take the case with the best solution."""
 
         matrix_dist = []
-
-        rating_list = []
+        rating_list = []        
         
         for case in retrieved_cases:
-            matrix_dist.append(self.similarity_function(new_problem, self.cases[case]))
+            matrix_dist.append(self.similarity_function(new_problem, case))
+                    
+            rating_list.append(case.evaluation_mean)
+        
+        rating_list = np.nan_to_num(rating_list, nan=0)  # Replace NaN values with 0
 
-        matrix_dist = np.array(matrix_dist)
-        rating_list = np.array(rating_list)
+        matrix_dist_array = np.array(matrix_dist)
+        ratings_array = np.array(rating_list)
+        # print("-----------------------------------------------------------------------")
+        # print(ratings_array)
+        
 
         dist_w = 0.8
 
-        # Faltaría normalización, es un poco xd todo
-        probabilities = - matrix_dist * dist_w + rating_list * (1 - dist_w)
-        
-        retrieved_cases = random.choices(retrieved_cases, weights=probabilities, k=3)
+        eps = 0.00005 # Evitar divisiones entre 0
+        matrix_dist_array = matrix_dist_array + eps
 
-        return retrieved_cases, matrix_dist
+        x =  dist_w * (1 / matrix_dist_array) * min(matrix_dist_array)
+        y = (1 - dist_w)* ratings_array / max(ratings_array)
 
+        probabilities =  x + y 
+
+        solutions = random.choices(retrieved_cases, weights=probabilities, k=3)
+
+        return solutions, matrix_dist
 
     def __evaluate(self, evaluation=None):
 
@@ -115,12 +126,12 @@ class CBR:
 
         if min_dist > self.gamma:
 
-            for i, solution in enumerate(solutions):
+            for i, case in enumerate(solutions):
                 problem = new_problem.copy()
                 problem.evaluation_mean = (problem.evaluation_mean * problem.evaluation_count + evaluations[i]) / (problem.evaluation_count + 1)
                 problem.evaluation_count += 1
 
-                case = self.cluster.get_case(cluster, solution)
+                # case = self.cluster.get_case(cluster, solution)
                 problem.title = case.title
                 problem.author = case.author
                 self.cluster.add_case(cluster, problem)
