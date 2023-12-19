@@ -124,7 +124,6 @@ class CBR:
                 problem.evaluation_mean = (problem.evaluation_mean * problem.evaluation_count + evaluations[i]) / (problem.evaluation_count + 1)
                 problem.evaluation_count += 1
 
-                # case = self.cluster.get_case(cluster, solution)
                 problem.title = case.title
                 problem.author = case.author
                 self.cluster.add_case(cluster, problem)
