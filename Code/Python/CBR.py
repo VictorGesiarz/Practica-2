@@ -4,13 +4,10 @@ current_file_path = os.path.abspath(__file__)
 code_directory = os.path.abspath(os.path.join(current_file_path, '..', '..'))
 sys.path.append(code_directory)
 
-
-from kmodes.kmodes import KModes
 from Python.Case import Case
 from Python.Book import Book
 from Python.User import User, UserInteraction
 from Python.Clusters import Clusters
-from Python.Others import MessagePrinter
 from Python.Constants import *
 from typing import List
 import numpy as np
@@ -150,12 +147,16 @@ class CBR:
             case_to_add.author = reference_case.author
             self.cluster.add_case(cluster, case_to_add)
 
-            self.MP.e("CASE ADDED TO DATA BASE")
+            print(self.MP.e(f"CASE ADDED TO DATA BASE, with solution {case_to_add.title}"))
 
         for i, case in enumerate(solutions):
             if i != max_index:
                 case.evaluation_mean = (case.evaluation_mean * case.evaluation_count + evaluations[i]) / (case.evaluation_count + 1)
                 case.evaluation_count += 1
+
+
+    def utility_mesure(self, case):
+        ...
 
 
     def similarity_function(self, new_problem: Case, case: Case):
@@ -164,12 +165,6 @@ class CBR:
 
         new_problem_values, new_problem_genres = new_problem.get_variables()
         case_values, case_genres = case.get_variables()
-                
-        # weights = [1/4, 1/4] + [1 for _ in range(2, len(new_problem_values))]
-
-        # manhattan_similarity = sum(abs(new_problem_values[i] - case_values[i]) * weights[i] for i in range(len(new_problem_values)))
-
-        # genres_similarity = sum(new_problem_genres) - np.dot(np.array(new_problem_genres), np.array(case_genres))
 
         new_problem_list = new_problem_values + new_problem_genres
         case_list = case_values + case_genres
