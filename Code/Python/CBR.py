@@ -149,10 +149,11 @@ class CBR:
 
             print(self.MP.e(f"CASE ADDED TO DATA BASE, with solution {case_to_add.title}"))
 
-        for i, case in enumerate(solutions):
-            if i != max_index:
-                case.evaluation_mean = (case.evaluation_mean * case.evaluation_count + evaluations[i]) / (case.evaluation_count + 1)
-                case.evaluation_count += 1
+        else:
+            for i, case in enumerate(solutions):
+                if i != max_index:
+                    case.evaluation_mean = (case.evaluation_mean * case.evaluation_count + evaluations[i]) / (case.evaluation_count + 1)
+                    case.evaluation_count += 1
 
 
     def utility_mesure(self, case):
