@@ -20,8 +20,10 @@ class CBR:
         self.cluster = cluster
         self.books = books
         self.gamma = gamma
+        self.user = user
 
         self.UI = UI
+
         self.MP = self.UI.MP
 
 
@@ -69,14 +71,41 @@ class CBR:
 
         print(self.MP.l(style="h2", width=H2_WIDTH))
         print()
-        
+    
+
+    def __find_user_books(self):
+        user_books = []
+        user_books_title = []
+        for book in self.books:
+            if book.saga == 0:
+                continue
+
+            if book.title not in self.user.books_read:
+                continue
+
+            if book.followed_by and book.followed_by not in self.user.books_read:
+                user_books_title.append(book.title)
+            
+            if book.preceeded_by and book.preceeded_by not in self.user.books_read:
+                user_books_title.append(book.title)
+
+        for case in self.cluster.cases:          
+            if case.title  in user_books_title:
+                user_books.append(case)
+
+        return user_books
+
 
     def __retrieve(self, new_problem):
 
-        """In this function we comnpare the cases we have with the new one and select the most similar."""
+        """In this function we comnpare the cases we have with the new one and select the most similar."""   
         cluster = self.cluster.predict([new_problem])[0]
 
         retrieved_cases = self.cluster.tree[cluster]
+
+        if new_problem.saga == 1:
+            user_books = self.__find_user_books()
+            retrieved_cases = list(set(user_books + retrieved_cases))
 
         return cluster, retrieved_cases
 
@@ -87,9 +116,76 @@ class CBR:
 
         matrix_dist = []
         rating_list = []        
+
+        num_var = len(GENRES) + 5
         
+        weights = [1/4, 1/4] + [1 for _ in range(2, num_var)]
+        
+        p1 = 5
+        p2 = 3
+        p3 = 2            
+
+        if new_problem.genres[GENRES.index("fantasy")]:
+            weights[GENRES.index("sorcery")] = p1
+            weights[GENRES.index("magic")] = p1
+            weights[GENRES.index("sword")] = p2
+            weights[GENRES.index("high")] = p2
+            weights[GENRES.index("realism")] = 1/p1
+            weights[GENRES.index("science")] = 1/p1
+            weights[GENRES.index("speculative")] = 1/p2
+        
+        if new_problem.genres[GENRES.index("science")]:
+            weights[GENRES.index("time travel")] = p1
+            weights[GENRES.index("techno")] = p1
+
+        if new_problem.genres[GENRES.index("romance")]:
+            weights[GENRES.index("erotic")] = p2
+
+        if new_problem.genres[GENRES.index("horror")]:
+            weights[GENRES.index("vampire")] = p2
+
+        if new_problem.genres[GENRES.index("thriller")]:
+            weights[GENRES.index("detective")] = p2
+            weights[GENRES.index("crime")] = p2
+            weights[GENRES.index("mystery")] = p2
+
+        if new_problem.genres[GENRES.index("historical")]:
+            weights[GENRES.index("war")] = p1
+            weights[GENRES.index("military")] = p1
+            weights[GENRES.index("cyberpunk")] = 1/p1
+
+        if new_problem.genres[GENRES.index("childrens")]:
+            weights[GENRES.index("picture book")] = p1
+
+        if new_problem.genres[GENRES.index("drama")]:
+            weights[GENRES.index("tragedy")] = p1
+
+        if new_problem.genres[GENRES.index("comedy")]:
+            weights[GENRES.index("satire")] = p1
+            weights[GENRES.index("humour")] = p1
+            weights[GENRES.index("black")] = p3
+
+        if new_problem.genres[GENRES.index("mystery")]:
+            weights[GENRES.index("detective")] = p1
+            weights[GENRES.index("crime")] = p1
+
+        if new_problem.genres[GENRES.index("utopian")]:
+            weights[GENRES.index("dystopia")] = 1/p1
+
+        if new_problem.genres[GENRES.index("dystopia")]:
+            weights[GENRES.index("utopian")] = 1/p1
+
+        if 0 < new_problem.user_age < 10 or new_problem.genres[GENRES.index("childrens")]:
+            weights[GENRES.index("erotic")] = 1000
+            new_problem.genres[GENRES.index("childrens")] = 5
+    
+
         for case in retrieved_cases:
-            matrix_dist.append(self.similarity_function(new_problem, case))
+            if 0 < new_problem.user_age < 14:
+                if case.pages != 0:
+                    continue
+
+            matrix_dist.append(self.similarity_function(new_problem, case, weights))
                     
             rating_list.append(case.evaluation_mean)
         
@@ -108,10 +204,18 @@ class CBR:
         probabilities = x + y 
 
         solutions = []
+        solutions_titles = []
 
-        for _ in range(3):
+        i = 0
+
+        while i < 3:
             index = random.choices(range(len(retrieved_cases)), weights=probabilities, k=1)[0]
-            solutions.append(retrieved_cases[index])
+            title = retrieved_cases[index].title
+            if title not in solutions_titles:
+                i += 1
+                solutions_titles.append(title)
+                solutions.append(retrieved_cases[index])
+
             probabilities[index] = 0
 
         return solutions, matrix_dist
@@ -147,7 +251,7 @@ class CBR:
             case_to_add.author = reference_case.author
             self.cluster.add_case(cluster, case_to_add)
 
-            print(self.MP.e(f"CASE ADDED TO DATA BASE, with solution {case_to_add.title}"))
+            # print(self.MP.e(f"CASE ADDED TO DATA BASE, with solution {case_to_add.title}"))
 
         else:
             for i, case in enumerate(solutions):
@@ -160,7 +264,7 @@ class CBR:
         ...
 
 
-    def similarity_function(self, new_problem: Case, case: Case):
+    def similarity_function(self, new_problem: Case, case: Case, weights: List[float]=None):
         
         """Function to calculate the similarity between two cases. This function performs the Manhattan distance."""
 
@@ -169,6 +273,7 @@ class CBR:
 
         new_problem_list = new_problem_values + new_problem_genres
         case_list = case_values + case_genres
-        weights = [1/4, 1/4] + [1 for _ in range(2, len(new_problem_list))]
+        if not weights:
+            weights = [1/4, 1/4] + [1 for _ in range(2, len(new_problem_list))]
 
         return sum(abs(new_problem_list[i] - case_list[i]) * weights[i] for i in range(len(new_problem_list)))

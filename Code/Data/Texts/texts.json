@@ -33,17 +33,17 @@
         },
         "Bestseller": {
             "Question": "Do you want the book to be a bestseller?",
-            "Options": ["Yes", "No"],
+            "Options": ["No", "Yes"],
             "Type": "Single Choice"
         },
         "Film": {
             "Question": "Do you want the book to be adapted to a film?",
-            "Options": ["Yes", "No"],
+            "Options": ["No", "Yes"],
             "Type": "Single Choice"
         },
         "Saga": {
             "Question": "Do you want the book to be part of a saga?",
-            "Options": ["Yes", "No"],
+            "Options": ["No", "Yes"],
             "Type": "Single Choice"
         },
         "Publication Year": {
@@ -53,7 +53,7 @@
         },
         "Rating": {
             "Question": "Do you care about the rating of a book?",
-            "Options": ["Yes", "No"],
+            "Options": ["No", "Yes"],
             "Type": "Single Choice"
         },
         "Genres": {

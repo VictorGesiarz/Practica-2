@@ -55,7 +55,7 @@ def kronecker_delta(value_i, value_j):
 # Example usage
 case1 = [5, 'category_A', 10.5]
 case2 = [7, 'category_B', 9.5]
-weights = [0.2, 0.5, 0.3]
+weights = [1, 0.5, 0.3]
 cut_point = 0.5
 
 distance = leixample_distance(case1, case2, weights, cut_point)
