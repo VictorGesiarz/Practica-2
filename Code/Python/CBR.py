@@ -259,9 +259,8 @@ class CBR:
 
         else:
             for i, case in enumerate(solutions):
-                if i != max_index:
-                    case.evaluation_mean = (case.evaluation_mean * case.evaluation_count + evaluations[i]) / (case.evaluation_count + 1)
-                    case.evaluation_count += 1
+                case.evaluation_mean = (case.evaluation_mean * case.evaluation_count + evaluations[i]) / (case.evaluation_count + 1)
+                case.evaluation_count += 1
 
                 if self.__is_useless(case):
                     self.cluster.remove_case(cluster, case)
