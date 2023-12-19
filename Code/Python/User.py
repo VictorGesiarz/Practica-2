@@ -144,7 +144,7 @@ class UserInteraction:
                 print(self.MP.e(error_string, additional_message=", ".join([str(i) for i in invalid_options]), center=False))
 
 
-    def ask_multiple_choice_question(self, question):
+    def ask_multiple_choice_question(self, question, answers_range=False):
 
         answer = []
         
@@ -152,6 +152,8 @@ class UserInteraction:
         question_string = self.MP.read("Questions", question, "Question")
         missing_options = self.MP.read("Errors", "Missing Options")
         error_string = self.MP.read("Errors", "Invalid Options")
+
+        if answers_range: question_string += f' Select between {answers_range[0]} and {answers_range[1]}'
 
         finish = False
         while not finish: 
@@ -173,13 +175,17 @@ class UserInteraction:
                     if i not in available_options.keys():
                         invalid_options.append(i)
                     elif i == len(options) - 1: 
-                        if len(answer) < 3:
-                            print(self.MP.e(missing_options, additional_message=", ".join([str(i) for i in invalid_options]), center=False))                  
+                        if len(answer) < answers_range[0]:
+                            print(self.MP.e(missing_options, additional_message=str(answers_range[0]), center=False))                  
                         else:
                             finish = True
                             break
                     else:
                         answer.append(options[i])
+                    
+                    if len(answer) >= answers_range[1]:
+                        finish = True
+                        break
                 else: 
                     if i in available_options.values():
                         answer.append(i)
@@ -189,6 +195,7 @@ class UserInteraction:
             if invalid_options != []:
                 print(self.MP.e(error_string, additional_message=", ".join([str(i) for i in invalid_options]), center=False))
 
+        print(self.MP.p(f'Chosen options: {" / ".join(answer)}'))
         return answer
 
 
@@ -196,13 +203,13 @@ class UserInteraction:
         ...
         
         
-    def ask_question(self, question): 
+    def ask_question(self, question, answers_range=False): 
         question_type = self.MP.read("Questions", question, "Type")
         
         if question_type == "Single Choice":
             return self.ask_single_choice_question(question)
         elif question_type == "Multiple Choice":
-            return self.ask_multiple_choice_question(question)
+            return self.ask_multiple_choice_question(question, answers_range=answers_range)
         elif question_type == "Range":
             return self.ask_range_question(question)
         
@@ -213,64 +220,9 @@ class UserInteraction:
         
         antiquity   = self.ask_question("Publication Year")
         pages       = self.ask_question("Pages")
-        genres      = self.ask_question("Genres")
+        genres      = self.ask_question("Genres", answers_range=[3, 6])
         bestseller  = self.ask_question("Bestseller")
         film        = self.ask_question("Film")
         saga        = self.ask_question("Saga")
 
         return antiquity, pages, genres, bestseller, film, saga
-        
-        # ['speculative',
-        # 'science',
-        # 'fantasy',
-        # 'childrens',
-        # 'mistery',
-        # 'suspense',
-        # 'crime',
-        # 'thriller',
-        # 'historical',
-        # 'history', # Se puede juntar con historical
-        # 'young adult',
-        # 'horror',
-        # 'romance',
-        # 'detective',
-        # 'adventure',
-        # 'spy',
-        # 'alternate',
-        # 'satire',
-        # 'gothic', 
-        # 'techno',
-        # 'war',
-        # 'sword',
-        # 'humour',
-        # 'sorcery',
-        # 'dystopia',
-        # 'utopian',
-        # 'high', # high fantasy
-        # 'picture book', # Para niños muy pequeños
-        # 'comic', # Remplazarla por comedy
-        # 'western',
-        # 'whodunnit', #  detective
-        # 'military',
-        # 'black', #'black comedy
-        # 'time travel',
-        # 'apocalyptic', # Tambien recogería postapocalyptic
-        # 'hard', # hard-science
-        # 'magic',
-        # 'realism',
-        # 'steampunk', 
-        # 'literary', # El plot no es lo que más importa, el tema y los personajes es más importante
-        # 'epistolary', # El libro son cartas entre los personajes
-        # 'alternate', # What if
-        # 'drama',
-        # 'tragedy', # Dentro de drama
-        # 'erotic',
-        # 'vampire',
-        # 'cyberpunk', # Podría juntar cyberpunk, steampunk, postcyberpunk
-        # 'true', # true Crime
-        # 'sci-fi', # Como Science
-        # 'fairy tale', # Como childrens?
-        # 'epic', # Epic fantasy
-        # 'lost world', # Dentro apocalyptic
-        # 'homor' # Como humour
-        # ]

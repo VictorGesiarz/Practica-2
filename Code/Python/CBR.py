@@ -36,7 +36,7 @@ class CBR:
         print("\n\n")
         return ""
 
-    # the ratings is used to test the system
+
     def run(self, new_problem: Case, ratings=None):
         cluster, retrieved_cases = self.__retrieve(new_problem)
         solutions, matrix_dist = self.__adapt(new_problem, retrieved_cases)
@@ -87,10 +87,9 @@ class CBR:
         eps = 0.00005 # Evitar divisiones entre 0
         matrix_dist_array = matrix_dist_array + eps
 
-        x =  dist_w * (1 / matrix_dist_array) * min(matrix_dist_array)
-        y = (1 - dist_w)* ratings_array / max(ratings_array)
-
-        probabilities =  x + y 
+        x = dist_w * (1 / matrix_dist_array) * min(matrix_dist_array)
+        y = (1 - dist_w) * ratings_array / max(ratings_array)
+        probabilities = x + y 
 
         solutions = []
 
@@ -100,6 +99,7 @@ class CBR:
             probabilities[index] = 0
 
         return solutions, matrix_dist
+
 
     def __evaluate(self, evaluation=None):
 
@@ -124,6 +124,7 @@ class CBR:
                 problem.evaluation_mean = (problem.evaluation_mean * problem.evaluation_count + evaluations[i]) / (problem.evaluation_count + 1)
                 problem.evaluation_count += 1
 
+                # case = self.cluster.get_case(cluster, solution)
                 problem.title = case.title
                 problem.author = case.author
                 self.cluster.add_case(cluster, problem)
@@ -147,5 +148,3 @@ class CBR:
         weights = [1/4, 1/4] + [1 for _ in range(2, len(new_problem_list))]
 
         return sum(abs(new_problem_list[i] - case_list[i]) * weights[i] for i in range(len(new_problem_list)))
-
-        # return manhattan_similarity + genres_similarity

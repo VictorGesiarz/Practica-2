@@ -1,4 +1,7 @@
 
+python "D:\Documentos\Victor\Uni\5o cuadri\SBC\Practica 2\Code\Python\Program.py"
+
+
 ## Retrieve
 ### ¿Cómo representamos al usuario?
 
