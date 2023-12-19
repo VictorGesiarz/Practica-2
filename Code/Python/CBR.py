@@ -263,6 +263,9 @@ class CBR:
                     case.evaluation_mean = (case.evaluation_mean * case.evaluation_count + evaluations[i]) / (case.evaluation_count + 1)
                     case.evaluation_count += 1
 
+                if self.__is_useless(case):
+                    self.cluster.remove_case(cluster, case)
+
 
     def __is_useless(self, case):
         count = case.evaluation_count
