@@ -3,36 +3,42 @@ from Book import Book
 from User import User
 from typing import List
 import numpy as np
+import random 
 
 
 class CBR:
     
-    def __init__(self, cases: List[Case], books: List[Book], user: User, MP) -> None:
+    def __init__(self, cases: List[Case], books: List[Book], user: User, MP=None, gamma = 0) -> None:
         self.cases = cases
         self.books = books
+        self.gamma = gamma
 
-        self.length = len(cases)
-
+    def __len__(self):
+        return len(self.cases)
 
     def __repr__(self) -> str:
         print("\n\n")
         print("This CBR contains the next cases: \n")
-        for i in range(self.length):
+        for i in range(len(self)):
             print(f'{self.cases[i]}, with an evaluation of {self.evaluations[i]}')
         print("\n\n")
         return ""
-    
 
-    def run(self, new_problem: Case):
-
+    # the ratings is used to test the system
+    def run(self, new_problem: Case, ratings=None):
         retrieved_cases = self.__retrieve(new_problem)
-        solutions = self.__adapt(retrieved_cases)
+        solutions, matrix_dist = self.__adapt(new_problem, retrieved_cases)
 
-        for i in solutions:
-            print(f"We recommend you to read: {self.cases[i]}")
+        if not ratings:
+            for i in solutions:
+                print(f"We recommend you to read: {self.cases[i]}")
 
-        evaluations = self.__evaluate()
-        self.__learn(new_problem, solutions, evaluations)
+        evaluations = self.__evaluate(ratings)
+        
+        self.__learn(new_problem, matrix_dist, solutions, evaluations)
+
+        if ratings:
+            return retrieved_cases
     
 
     def __retrieve(self, new_problem):
@@ -50,7 +56,7 @@ class CBR:
         return sorted_indices
 
 
-    def __adapt(self, retrieved_cases):
+    def __adapt(self, new_problem, retrieved_cases):
 
         """In this function we take the case with the best solution."""
 
@@ -60,32 +66,55 @@ class CBR:
 
         # index = averages.index(max(averages))
 
-        return retrieved_cases
+        matrix_dist = []
+
+        rating_list = []
+        
+        for case in retrieved_cases:
+            matrix_dist.append(self.similarity_function(new_problem, self.cases[case]))
+
+        matrix_dist = np.array(matrix_dist)
+        rating_list = np.array(rating_list)
+
+        dist_w = 0.8
+
+        # Faltaría normalización, es un poco xd todo
+        probabilities = - matrix_dist * dist_w + rating_list * (1 - dist_w)
+        
+        retrieved_cases = random.choices(retrieved_cases, weights=probabilities, k=3)
+
+        return retrieved_cases, matrix_dist
 
 
-    def __evaluate(self):
+    def __evaluate(self, evaluation=None):
 
         """In this function we will evaluate the given solution by asking the user how good it was."""
         
-        evaluation = input("Rate from 1 to 5 each of the recommendations: ").split()
-        evaluation = [int(i) for i in evaluation]
+        if not evaluation:
+            evaluation = input("Rate from 1 to 5 each of the recommendations: ").split()
+            evaluation = [int(i) for i in evaluation]
+        
+        
         return evaluation
 
 
-    def __learn(self, new_problem, solutions, evaluations=[]):
+    def __learn(self, new_problem, matrix_dist, solutions, evaluations=[]):
         
         """In this function we save the new case with the corresponding solution and evaluation."""
 
-        for i, solution in enumerate(solutions):
-            problem = new_problem.copy()
-            problem.evaluation_mean = (problem.evaluation_mean * problem.evaluation_count + evaluations[i]) / (problem.evaluation_count + 1)
-            problem.evaluation_count += 1
+        min_dist = min(matrix_dist)
 
-            problem.title = self.cases[solution].title
-            problem.author = self.cases[solution].author
-            self.cases.append(problem)
+        if min_dist > self.gamma:
 
-            self.length += 1
+            for i, solution in enumerate(solutions):
+                problem = new_problem.copy()
+                problem.evaluation_mean = (problem.evaluation_mean * problem.evaluation_count + evaluations[i]) / (problem.evaluation_count + 1)
+                problem.evaluation_count += 1
+
+                problem.title = self.cases[solution].title
+                problem.author = self.cases[solution].author
+                self.cases.append(problem)
+
 
 
     def similarity_function(self, new_problem: Case, case: Case):
